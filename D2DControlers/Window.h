@@ -26,7 +26,7 @@ public:
 
 	void Redraw() const;
 	void Show() const;
-	void AddElement(Element& rElement);
+	void AddElement(Element& rElement, bool enableMouseEvents = false);
 	int GetActualWidth() const;
 	int GetActualHeight() const;
 	Element* operator[](int index);

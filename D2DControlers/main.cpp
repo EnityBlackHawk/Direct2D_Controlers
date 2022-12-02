@@ -36,13 +36,13 @@ BOOL WinMain(HINSTANCE hInstance, HINSTANCE hIgnore, PSTR lpCmdLine, INT nCmdSho
 
 	Frame f(20, 20, 100, 100, ALIGN_STREACH, style);
 	rf = &f;
-	//f.AddEvent(ON_MOUSE_HOVER, eventTest);
-	//f.AddEvent(ON_MOUSE_HOVER_OUT, eventTestOut);
 
 	Frame f2(AUTO, AUTO, 50, 50, ALIGN_CENTER, ElementStyle(0x0, 0x0, 0, 0, 0));
+	f2.AddEvent(ON_MOUSE_HOVER, eventTest);
+	f2.AddEvent(ON_MOUSE_HOVER_OUT, eventTestOut);
 
 	window->AddElement(f);
-	window->AddElement(f2);
+	window->AddElement(f2, true);
 	window->Show();
 
 }

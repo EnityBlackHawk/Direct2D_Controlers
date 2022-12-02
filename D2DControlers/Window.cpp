@@ -161,11 +161,12 @@ void Window::Show() const
 
 }
 
-void Window::AddElement(Element& rElement)
+void Window::AddElement(Element& rElement, bool enableMouseEvents)
 {
     rElement.SetParent(hwnd);
     elements.push_back(&rElement);
-    mouseTracker.AddElement(&rElement);
+    if(enableMouseEvents)
+        mouseTracker.AddElement(&rElement);
 }
 
 int Window::GetActualWidth() const
