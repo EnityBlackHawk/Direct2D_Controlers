@@ -5,6 +5,7 @@
 #include "Exception.h"
 #include <d2d1.h>
 #include "MouseTracker.h"
+#include "Animator.h"
 
 #pragma comment(lib, "d2d1")
 
@@ -31,6 +32,7 @@ public:
 	int GetActualHeight() const;
 	Element* operator[](int index);
 	HWND GetHwnd() const;
+	Animator& GetAnimator();
 
 private:
 	HWND hwnd;
@@ -42,6 +44,7 @@ private:
 	ID2D1HwndRenderTarget* pRenderTarget;
 	ID2D1Factory* pFactory;
 	MouseTracker mouseTracker;
-
+	Animator animator;
+	mutable bool isBusy = false;
 };
 

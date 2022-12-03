@@ -140,8 +140,8 @@ public:
 			auto newX = (size.width / 2) - (width / 2);
 			auto newY = ((size.height / 2) - (height / 2));
 
-			posX = newX;
-			posY = newY;
+			posX = newX - margin.right + margin.left;
+			posY = newY - margin.bottom + margin.top;
 		}
 		else if (align == ALIGN_STREACH)
 		{

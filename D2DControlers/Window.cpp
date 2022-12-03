@@ -57,7 +57,7 @@ Window::Window(const char* name, HINSTANCE hInstance, WNDPROC windowProcedure, M
     
 
 }
-
+bool foo = true;
 LRESULT Window::InternalWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     switch (uMsg)
@@ -79,6 +79,9 @@ LRESULT Window::InternalWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM l
     {
         PAINTSTRUCT ps = {};
         BeginPaint(hwnd, &ps);
+
+        while (isBusy);
+        isBusy = true;
         pRenderTarget->BeginDraw();
         pRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::WhiteSmoke));
         for (auto e : elements)
@@ -87,6 +90,10 @@ LRESULT Window::InternalWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM l
         }
         pRenderTarget->EndDraw();
         EndPaint(hwnd, &ps);
+        if (foo) 
+            animator.StartAllAnimations();
+        foo = false;
+        isBusy = false;
         break;
     }
 
@@ -132,6 +139,8 @@ LRESULT Window::InternalWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM l
 
 void Window::Redraw() const
 {
+    while (isBusy);
+    isBusy = true;
     pRenderTarget->BeginDraw();
     pRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::WhiteSmoke));
     for (auto e : elements)
@@ -139,6 +148,7 @@ void Window::Redraw() const
         e->OnPaint(pRenderTarget);
     }
     pRenderTarget->EndDraw();
+    isBusy = false;
 }
 
 void Window::Show() const
@@ -191,4 +201,9 @@ Element* Window::operator[](int index)
 HWND Window::GetHwnd() const
 {
     return hwnd;
+}
+
+Animator& Window::GetAnimator()
+{
+    return animator;
 }
