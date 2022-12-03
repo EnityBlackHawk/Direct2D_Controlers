@@ -17,15 +17,13 @@ void MouseTracker::Procedure()
 	int lastX = 0;
 	int lastY = 0;
 
-	static Element* elementOnHover = nullptr;
-	static Geometry onHoverElementGometry = {};
 
-	if (elementOnHover && !IsInBound(onHoverElementGometry))
+	if (elementOnHover && !IsInBound(onHoverGeometry))
 	{
 		elementOnHover->Raise(ON_MOUSE_HOVER_OUT, nullptr);
 		elementOnHover = nullptr;
 	}
-	else if (elementOnHover && IsInBound(onHoverElementGometry))
+	else if (elementOnHover && IsInBound(onHoverGeometry))
 		return;
 	
 		
@@ -38,7 +36,7 @@ void MouseTracker::Procedure()
 			if (IsInBound(e->GetGeometry()))
 			{
 				elementOnHover = e;
-				onHoverElementGometry = e->GetGeometry();
+				onHoverGeometry = e->GetGeometry();
 
 				e->Raise(ON_MOUSE_HOVER, nullptr);
 				break;
@@ -48,6 +46,14 @@ void MouseTracker::Procedure()
 		lastY = mouseY;
 	}
 	
+}
+
+void MouseTracker::LeftClickProcedure()
+{
+	if (elementOnHover)
+	{
+		elementOnHover->Raise(ON_CLICK, nullptr);
+	}
 }
 
 void MouseTracker::SetMousePosition(int x, int y)

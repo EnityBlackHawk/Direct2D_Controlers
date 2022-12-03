@@ -17,6 +17,7 @@
 // Events macros
 #define ON_MOUSE_HOVER 1
 #define ON_MOUSE_HOVER_OUT 2
+#define ON_CLICK 3
 
 typedef void(*EVENT)(void* sender, void* args);
 

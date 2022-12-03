@@ -14,10 +14,13 @@ void Button::Create(HINSTANCE hInstance, HWND hParent, ID2D1HwndRenderTarget* pR
 
 void Button::Move(int x, int y)
 {
-    pLinearGradientBrush->SetStartPoint(D2D1::Point2(posX, posY));
-    pLinearGradientBrush->SetEndPoint(D2D1::Point2(posX + width, posY + height));
     posX = x;
     posY = y;
+    if (pLinearGradientBrush)
+    {
+        pLinearGradientBrush->SetStartPoint(D2D1::Point2(posX, posY));
+        pLinearGradientBrush->SetEndPoint(D2D1::Point2(posX + width, posY + height));
+    }
     roundRect = D2D1::RoundedRect(D2D1::Rect(posX, posY, posX + width, posY + height), style.getCornerRadius(), style.getCornerRadius());
 }
 
@@ -41,6 +44,14 @@ void Button::OnPaint(ID2D1HwndRenderTarget* pRenderTarget)
         pRenderTarget->FillRoundedRectangle(roundRect, pLinearGradientBrush);
     pRenderTarget->DrawTextA(text, getTextSize(text), pWriteFormat, D2D1::Rect(posX, posY, width + posX, height + posY),
        pForegroundBrush);
+}
+
+void Button::SetColorSolidColor(D2D1::ColorF color)
+{
+    if (pSolidColorBrush)
+    {
+        pSolidColorBrush->SetColor(color);
+    }
 }
 
 

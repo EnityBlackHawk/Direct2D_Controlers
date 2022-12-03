@@ -16,14 +16,20 @@ public:
 
 	void Procedure();
 
+	void LeftClickProcedure();
+
 	void SetMousePosition(int x, int y);
 
+private:
 
 
 	std::vector<Element*> elements;
 
 	int mouseX = 0;
 	int mouseY = 0;
+
+	Element* elementOnHover = nullptr;
+	Geometry onHoverGeometry = {};
 
 };
 

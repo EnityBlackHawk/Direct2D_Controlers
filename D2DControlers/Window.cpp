@@ -93,9 +93,6 @@ LRESULT Window::InternalWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM l
         }
         pRenderTarget->EndDraw();
         EndPaint(hwnd, &ps);
-        if (foo) 
-            animator.StartAllAnimations();
-        foo = false;
         isBusy = false;
         break;
     }
@@ -128,7 +125,7 @@ LRESULT Window::InternalWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM l
 
     case WM_LBUTTONUP:
     {
-
+        mouseTracker.LeftClickProcedure();
         break;
     }
 

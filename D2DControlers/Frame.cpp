@@ -82,10 +82,13 @@ void Frame::CreateResources(ID2D1HwndRenderTarget* pRenderTarget)
 
 void Frame::Move(int x, int y)
 {
-    pLinearGradientBrush->SetStartPoint(D2D1::Point2(posX, posY));
-    pLinearGradientBrush->SetEndPoint(D2D1::Point2(posX + width, posY + height));
     posX = x;
     posY = y;
+    if (pLinearGradientBrush)
+    {
+        pLinearGradientBrush->SetStartPoint(D2D1::Point2(posX, posY));
+        pLinearGradientBrush->SetEndPoint(D2D1::Point2(posX + width, posY + height));
+    }
 
     roundRect = D2D1::RoundedRect(D2D1::Rect(posX, posY, posX + width, posY + height), style.getCornerRadius(), style.getCornerRadius());
 }

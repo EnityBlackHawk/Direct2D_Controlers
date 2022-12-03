@@ -22,6 +22,8 @@ public:
 
 	virtual void OnPaint(ID2D1HwndRenderTarget* pRenderTarget) override;
 
+	void SetColorSolidColor(D2D1::ColorF color);
+
 
 private:
 
