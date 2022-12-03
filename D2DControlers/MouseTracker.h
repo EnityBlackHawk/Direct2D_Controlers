@@ -14,7 +14,7 @@ public:
 	
 	bool IsInBound(Geometry g);
 
-	static void Procedure(MouseTracker& mt);
+	void Procedure();
 
 	void SetMousePosition(int x, int y);
 

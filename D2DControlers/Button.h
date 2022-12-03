@@ -22,6 +22,7 @@ public:
 
 	virtual void OnPaint(ID2D1HwndRenderTarget* pRenderTarget) override;
 
+
 private:
 
 	void CreateResources(ID2D1HwndRenderTarget* pRenderTarget);
@@ -39,5 +40,6 @@ private:
 	IDWriteTextLayout* pTextLayout;
 	const WCHAR* text;
 	float fontSize;
+
 };
 

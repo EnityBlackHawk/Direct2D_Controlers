@@ -3,8 +3,8 @@
 
 #pragma comment(lib, "Dwmapi.lib")
 
-Window::Window(const char* name, HINSTANCE hInstance, WNDPROC windowProcedure, MainWindowSyle colorStyle, DWORD style, DWORD styleEx):
-    name(name), style(colorStyle), hInstance(hInstance)
+Window::Window(const char* name, HINSTANCE hInstance, WNDPROC windowProcedure, MainWindowSyle colorStyle, DWORD style, DWORD styleEx) :
+    name(name), style(colorStyle), hInstance(hInstance), hCursor(LoadCursor(NULL, IDC_ARROW))
 {
     elements = {};
 
@@ -12,7 +12,7 @@ Window::Window(const char* name, HINSTANCE hInstance, WNDPROC windowProcedure, M
     wc.lpszClassName = name;
     wc.lpfnWndProc = windowProcedure;
     wc.hbrBackground = CreateSolidBrush(colorStyle.background);
-    wc.hCursor = LoadCursor(NULL, IDC_ARROW);
+    //wc.hCursor = LoadCursor(NULL, IDC_ARROW);
 
     RegisterClass(&wc);
 
@@ -62,7 +62,10 @@ LRESULT Window::InternalWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM l
 {
     switch (uMsg)
     {
+    case WM_SETCURSOR:
+        SetCursor(hCursor);
 
+        break;
     case WM_CREATE:
         
         return 0;
@@ -120,7 +123,7 @@ LRESULT Window::InternalWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM l
 
     case WM_MOUSEMOVE:
         mouseTracker.SetMousePosition(LOWORD(lParam), HIWORD(lParam));
-        mouseTracker.Procedure(mouseTracker);
+        mouseTracker.Procedure();
         break;
 
     case WM_LBUTTONUP:
@@ -206,4 +209,9 @@ HWND Window::GetHwnd() const
 Animator& Window::GetAnimator()
 {
     return animator;
+}
+
+void Window::ChangeCursor(LPCSTR cursor) const
+{
+    hCursor = LoadCursor(NULL, cursor);
 }

@@ -34,6 +34,8 @@ public:
 	HWND GetHwnd() const;
 	Animator& GetAnimator();
 
+	void ChangeCursor(LPCSTR cursor) const;
+
 private:
 	HWND hwnd;
 	HINSTANCE hInstance;
@@ -45,6 +47,8 @@ private:
 	ID2D1Factory* pFactory;
 	MouseTracker mouseTracker;
 	Animator animator;
+
+	mutable HCURSOR hCursor;
 	mutable bool isBusy = false;
 };
 

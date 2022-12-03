@@ -12,7 +12,7 @@ bool MouseTracker::IsInBound(Geometry g)
 	return false;
 }
 
-void MouseTracker::Procedure(MouseTracker& mt)
+void MouseTracker::Procedure()
 {
 	int lastX = 0;
 	int lastY = 0;
@@ -20,20 +20,22 @@ void MouseTracker::Procedure(MouseTracker& mt)
 	static Element* elementOnHover = nullptr;
 	static Geometry onHoverElementGometry = {};
 
-	if (elementOnHover && !mt.IsInBound(onHoverElementGometry))
+	if (elementOnHover && !IsInBound(onHoverElementGometry))
 	{
 		elementOnHover->Raise(ON_MOUSE_HOVER_OUT, nullptr);
 		elementOnHover = nullptr;
 	}
-	else if (elementOnHover && mt.IsInBound(onHoverElementGometry))
+	else if (elementOnHover && IsInBound(onHoverElementGometry))
 		return;
+	
+		
 
 
-	if (lastX != mt.mouseX && lastY != mt.mouseY)
+	if (lastX != mouseX && lastY != mouseY)
 	{
-		for (Element* e : mt.elements)
+		for (Element* e : elements)
 		{
-			if (mt.IsInBound(e->GetGeometry()))
+			if (IsInBound(e->GetGeometry()))
 			{
 				elementOnHover = e;
 				onHoverElementGometry = e->GetGeometry();
@@ -42,8 +44,8 @@ void MouseTracker::Procedure(MouseTracker& mt)
 				break;
 			}
 		}
-		lastX = mt.mouseX;
-		lastY = mt.mouseY;
+		lastX = mouseX;
+		lastY = mouseY;
 	}
 	
 }

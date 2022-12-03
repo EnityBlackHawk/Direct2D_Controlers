@@ -43,6 +43,7 @@ void Button::OnPaint(ID2D1HwndRenderTarget* pRenderTarget)
        pForegroundBrush);
 }
 
+
 void Button::CreateResources(ID2D1HwndRenderTarget* pRenderTarget)
 {
     if (style.getTypeOfBrush() == SOLID_COLOR)

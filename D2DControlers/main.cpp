@@ -10,49 +10,30 @@ Frame* rf;
 int delta = 0;
 bool loaded = false;
 
+
 void animation(float delta)
 {
 	rf->Move(delta, delta);
 	window->Redraw();
 }
 
-DWORD WINAPI AnimationThread()
-{
-	while (delta <= 300)
-	{
-		rf->Move(delta, delta);
-		window->Redraw();
-		delta++;
-	}
-	return 0;
-}
 
 LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	if (uMsg == WM_PAINT)
-	{
-		/*if(!loaded)
-			CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)AnimationThread, nullptr, NULL, nullptr);
-		loaded = true;*/
-	}
-
-	
-
-
 	return window->InternalWindowProc(hwnd, uMsg, wParam, lParam);
 }
 
 void eventTest(void* sender, void* args)
 {
-	((Frame*)sender)->SetColor(D2D1::ColorF(0x00FF00, 0.5f));
-	window->Redraw();
+	//SetCursor(((Button*)sender)->getCursor());
+	window->ChangeCursor(IDC_HAND);
 }
 
 void eventTestOut(void* sender, void* args)
 {
-	((Frame*)sender)->SetColor(D2D1::ColorF(0xFF0000, 1));
-	window->Redraw();
+	window->ChangeCursor(IDC_ARROW);
 }
+
 
 
 BOOL WinMain(HINSTANCE hInstance, HINSTANCE hIgnore, PSTR lpCmdLine, INT nCmdShow)
@@ -70,9 +51,11 @@ BOOL WinMain(HINSTANCE hInstance, HINSTANCE hIgnore, PSTR lpCmdLine, INT nCmdSho
 	ElementStyle s2(LINEAR_GRADIENT, { 0x473dcc, 0x1b165c }, 0xFFFFFF, 10, 0, 0.0f);
 	Button b(AUTO, AUTO, 255, 50, ALIGN_CENTER, L"Teste", s2);
 
+	b.AddEvent(ON_MOUSE_HOVER, eventTest);
+	b.AddEvent(ON_MOUSE_HOVER_OUT, eventTestOut);
 
 	window->AddElement(f);
-	window->AddElement(b);
+	window->AddElement(b, true);
 	//window->AddElement(f2, true);
 	//window->GetAnimator().AddAnimation(animation, 0, 300, 50 );
 	window->Show();
