@@ -2,6 +2,7 @@
 #include "ElementStyle.h"
 #include "Window.h"
 #include "Frame.h"
+#include "Button.h"
 
 Window* window;
 Frame* rf;
@@ -62,14 +63,18 @@ BOOL WinMain(HINSTANCE hInstance, HINSTANCE hIgnore, PSTR lpCmdLine, INT nCmdSho
 
 	Frame f(20, 20, 100, 100, ALIGN_STREACH, style);
 
-	Frame f2(AUTO, AUTO, 50, 50, ALIGN_CENTER, ElementStyle(0xFF0000, 0x0, 0, 0, 0));
+	/*Frame f2(AUTO, AUTO, 50, 50, ALIGN_CENTER, ElementStyle(0xFF0000, 0x0, 0, 0, 0));
 	f2.AddEvent(ON_MOUSE_HOVER, eventTest);
 	f2.AddEvent(ON_MOUSE_HOVER_OUT, eventTestOut);
-	rf = &f2;
+	rf = &f2;*/
+	ElementStyle s2(LINEAR_GRADIENT, { 0x473dcc, 0x1b165c }, 0xFFFFFF, 10, 0, 0.0f);
+	Button b(AUTO, AUTO, 255, 50, ALIGN_CENTER, L"Teste", s2);
+
 
 	window->AddElement(f);
-	window->AddElement(f2, true);
-	window->GetAnimator().AddAnimation(animation, 0, 300, 50 );
+	window->AddElement(b);
+	//window->AddElement(f2, true);
+	//window->GetAnimator().AddAnimation(animation, 0, 300, 50 );
 	window->Show();
 
 }
