@@ -31,10 +31,6 @@ public:
 
 	virtual void Raise(int eventId, void* args) override;
 
-	float getOpacity()
-	{
-		return pSolidColorBrush->GetOpacity();
-	}
 
 private:
 

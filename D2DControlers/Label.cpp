@@ -17,10 +17,13 @@ void Label::Create(HINSTANCE hInstance, HWND hParent, ID2D1HwndRenderTarget* pRe
 
 void Label::SetOpacity(float opacity)
 {
+    pSolidColorBrush->SetOpacity(opacity);
 }
 
 void Label::Move(int x, int y)
 {
+    posX = x;
+    posY = y;
 }
 
 HWND Label::Show(HWND hParent, HINSTANCE hInstance)
@@ -63,10 +66,11 @@ void Label::CreateResources(ID2D1HwndRenderTarget* pRenderTarget)
         if (width == AUTO) width = tm.width + 1;
         if (height == AUTO) height = tm.height + 1;
 
+        pTextLayout->Release();
+
     }
-
-
 
     pWriteFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER);
     pWriteFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
+
 }
