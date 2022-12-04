@@ -137,6 +137,7 @@
     <ClInclude Include="Frame.h" />
     <ClInclude Include="IInteractable.h" />
     <ClInclude Include="IParentable.h" />
+    <ClInclude Include="Label.h" />
     <ClInclude Include="MouseTracker.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
@@ -145,6 +146,7 @@
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="ElementStyle.cpp" />
     <ClCompile Include="Frame.cpp" />
+    <ClCompile Include="Label.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MouseTracker.cpp" />
     <ClCompile Include="Window.cpp" />

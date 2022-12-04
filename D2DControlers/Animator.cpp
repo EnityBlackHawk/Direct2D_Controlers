@@ -46,12 +46,21 @@ DWORD __stdcall Animator::AnimationThread(_animation* an)
     while (true)
     {
         an->animation(delta);
+
+        if (delta == an->targetValue)
+            break;
+
         delta += an->changeRate;
 
         if (an->changeRate < 0 && delta < an->targetValue)
-            break;
+        {
+            delta = an->targetValue;
+        }
         if (an->changeRate > 0 && delta > an->targetValue)
-            break;
+        {
+            delta = an->targetValue;
+        }
+
 
         Sleep(1);
     }

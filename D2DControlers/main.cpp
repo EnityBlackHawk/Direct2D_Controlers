@@ -4,6 +4,7 @@
 #include "Window.h"
 #include "Frame.h"
 #include "Button.h"
+#include "Label.h"
 
 Window* window;
 Frame* rf;
@@ -45,6 +46,7 @@ void moveAni(float delta)
 		window->GetMouseTracker().Procedure();
 		window->GetAnimator().StartAnimation(3);
 	}
+	auto i = pB->getOpacity();
 }
 
 LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -67,6 +69,7 @@ void eventTestOut(void* sender, void* args)
 
 void eventClick(void* sender, void* args)
 {
+	pB->SetAlign(ALIGN_NONE);
 	pB->SetActivate(false);
 	window->GetAnimator().StartAnimation(2);
 }
@@ -81,7 +84,7 @@ BOOL WinMain(HINSTANCE hInstance, HINSTANCE hIgnore, PSTR lpCmdLine, INT nCmdSho
 	Frame f(20, 20, 100, 100, ALIGN_STREACH, style);
 
 	ElementStyle s2(SOLID_COLOR, {D2D1::ColorF(0xFFFFFF, 0.5f)}, NULL, 10, NULL, 0 );
-	Button b(0, 0, 255, 50, ALIGN_CENTER, L"Teste", s2);
+	Button b(AUTO, AUTO, AUTO, 50, ALIGN_CENTER, L"Teste", s2);
 	b.margin = { 0, 0, b.GetWidth() / 2 + 5, 0 };
 
 	pB = &b;
@@ -89,17 +92,21 @@ BOOL WinMain(HINSTANCE hInstance, HINSTANCE hIgnore, PSTR lpCmdLine, INT nCmdSho
 	//b.AddEvent(ON_MOUSE_HOVER_OUT, eventTestOut);
 	b.AddEvent(ON_MOUSE_HOVER, eventClick);
 
-	Button b2(AUTO, AUTO, 255, 50, ALIGN_CENTER, L"Teste2", s2);
+	Button b2(AUTO, AUTO, AUTO, 50, ALIGN_CENTER, L"Teste2", s2);
 	b2.margin = { b.GetWidth() / 2 + 5, 0, 0, 0 };
+
+
+	Label l(0, 0, AUTO, AUTO, ALIGN_NONE, L"Label", 30, ElementStyle(0, 0xFFFFFF, 0, 0, 0));
 
 	window->AddElement(f);
 	window->AddElement(b2, true);
 	window->AddElement(b, true);
+	window->AddElement(l);
 
 	window->GetAnimator().AddAnimation(animation, 0.5f, 1.0f, 250, &b);
 	window->GetAnimator().AddAnimation(animation, 1.0f, 0.5f, 250, &b);
-	window->GetAnimator().AddAnimation(moveAni, 1, 0, 250, &b);
-	window->GetAnimator().AddAnimation(opacityIn, 0, 1, 250, &b);
+	window->GetAnimator().AddAnimation(moveAni, 1, 0, 100, &b);
+	window->GetAnimator().AddAnimation(opacityIn, 0, 1, 500, &b);
 	window->Show();
 
 }

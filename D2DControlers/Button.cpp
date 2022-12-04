@@ -2,13 +2,12 @@
 #include "Exception.h"
 
 Button::Button(int x, int y, int width, int height, unsigned char align, const WCHAR text[], ElementStyle style):
-    Element(x, y, width, height, align), text(text), style(style), fontSize(20.0f)
+    Element(x, y, width == AUTO ? height * 5.10 : width, height, align), text(text), style(style), fontSize(20.0f)
 {
 }
 
 void Button::Create(HINSTANCE hInstance, HWND hParent, ID2D1HwndRenderTarget* pRenderTarget)
 {
-    ppRenderTarget = &pRenderTarget;
     CreateResources(pRenderTarget);
 }
 
