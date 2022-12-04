@@ -1,6 +1,5 @@
 #include "Animator.h"
 
-std::vector<Element*> Animator::elementsOnAnimation;
 
 int callCounter = 0;
 
@@ -24,17 +23,6 @@ void Animator::StartAnimation(int index)
     if (callCounter > callLimit)
         return;
     _animation& an = animations[index];
-    if (an.pElement)
-    {
-        if (std::find(elementsOnAnimation.begin(), elementsOnAnimation.end(), an.pElement) != elementsOnAnimation.end())
-            return;
-        else
-        {
-            elementsOnAnimation.push_back(an.pElement);
-            an._index = elementsOnAnimation.size() - 1;
-        }
-    }
-    
 
     CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)Animator::AnimationThread, (void*)&an, NULL, nullptr);
     callCounter++;
@@ -53,6 +41,7 @@ void Animator::StartAllAnimations()
 
 DWORD __stdcall Animator::AnimationThread(_animation* an)
 {
+
     float delta = an->initialValue;
     while (true)
     {
@@ -67,7 +56,7 @@ DWORD __stdcall Animator::AnimationThread(_animation* an)
         Sleep(1);
     }
     callCounter--;
-    //std::remove(Animator::elementsOnAnimation.begin(), Animator::elementsOnAnimation.end(), an->pElement);
-    Animator::elementsOnAnimation.erase(Animator::elementsOnAnimation.begin() + an->_index);
+
+
     return 0;
 }

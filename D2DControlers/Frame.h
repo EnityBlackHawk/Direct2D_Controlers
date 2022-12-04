@@ -15,6 +15,8 @@ public:
 
 	virtual HWND Show(HWND hParent, HINSTANCE hInstance) override;
 
+	virtual void SetOpacity(float) override {}
+
 	void OnPaint(ID2D1HwndRenderTarget* pRenderTarget) override;
 	void CreateResources(ID2D1HwndRenderTarget* pRenderTarget);
 

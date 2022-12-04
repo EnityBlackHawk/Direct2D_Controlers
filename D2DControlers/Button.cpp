@@ -46,12 +46,37 @@ void Button::OnPaint(ID2D1HwndRenderTarget* pRenderTarget)
        pForegroundBrush);
 }
 
+void Button::SetOpacity(float opacity)
+{
+    if (pSolidColorBrush)
+        pSolidColorBrush->SetOpacity(opacity);
+    if (pLinearGradientBrush)
+        pLinearGradientBrush->SetOpacity(opacity);
+    pForegroundBrush->SetOpacity(opacity);
+}
+
 void Button::SetColorSolidColor(D2D1::ColorF color)
 {
     if (pSolidColorBrush)
     {
         pSolidColorBrush->SetColor(color);
     }
+}
+
+void Button::SetActivate(bool value)
+{
+    isActivate = value;
+}
+
+bool Button::isActivated() const
+{
+    return isActivate;
+}
+
+void Button::Raise(int eventId, void* args)
+{
+    if (isActivate)
+        Element::Raise(eventId, args);
 }
 
 

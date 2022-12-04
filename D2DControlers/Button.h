@@ -22,8 +22,14 @@ public:
 
 	virtual void OnPaint(ID2D1HwndRenderTarget* pRenderTarget) override;
 
+	virtual void SetOpacity(float opacity) override;
+
 	void SetColorSolidColor(D2D1::ColorF color);
 
+	void SetActivate(bool value);
+	bool isActivated() const;
+
+	virtual void Raise(int eventId, void* args) override;
 
 private:
 
@@ -42,6 +48,7 @@ private:
 	IDWriteTextLayout* pTextLayout;
 	const WCHAR* text;
 	float fontSize;
+	bool isActivate = true;
 
 };
 

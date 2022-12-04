@@ -33,8 +33,16 @@ public:
 	Element* operator[](int index);
 	HWND GetHwnd() const;
 	Animator& GetAnimator();
+	MouseTracker& GetMouseTracker();
+
+	void RequestRedraw();
+	void ClearRedrawRequest();
+	bool IsRedrawRequested();
+
 
 	void ChangeCursor(LPCSTR cursor) const;
+
+	static DWORD WINAPI DrawThread(Window* pWindow);
 
 private:
 	HWND hwnd;
@@ -47,6 +55,10 @@ private:
 	ID2D1Factory* pFactory;
 	MouseTracker mouseTracker;
 	Animator animator;
+
+	HANDLE hDrawThread;
+
+	bool isRedrawRequested = false;
 
 	mutable HCURSOR hCursor;
 	mutable bool isBusy = false;

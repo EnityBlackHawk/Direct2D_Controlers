@@ -29,7 +29,6 @@ public:
 
 	static DWORD WINAPI AnimationThread(_animation*);
 
-	static std::vector<Element*> elementsOnAnimation;
 
 private:
 

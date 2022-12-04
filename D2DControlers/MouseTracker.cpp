@@ -18,12 +18,12 @@ void MouseTracker::Procedure()
 	int lastY = 0;
 
 
-	if (elementOnHover && !IsInBound(onHoverGeometry))
+	if (elementOnHover && !IsInBound(elementOnHover->GetGeometry()))
 	{
 		elementOnHover->Raise(ON_MOUSE_HOVER_OUT, nullptr);
 		elementOnHover = nullptr;
 	}
-	else if (elementOnHover && IsInBound(onHoverGeometry))
+	else if (elementOnHover && IsInBound(elementOnHover->GetGeometry()))
 		return;
 	
 		

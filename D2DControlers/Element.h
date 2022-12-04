@@ -60,7 +60,7 @@ public:
 		events[eventId] = action;
 	}
 
-	void Raise(int eventId, void* args)
+	virtual void Raise(int eventId, void* args)
 	{
 		if (events.contains(eventId))
 			events[eventId](this, args);
@@ -109,15 +109,12 @@ public:
 		align = newAlign;
 	}
 
+	virtual void SetOpacity(float opacity) = 0;
+
 	
 	virtual void Move(int x, int y) = 0;
 
-	/// <summary>
-	/// Draw window
-	/// </summary>
-	/// <param name="hParent">Parent's HWND</param>
-	/// <param name="hInstance">Application HINSTANCE</param>
-	/// <returns>Window HWND</returns>
+
 	virtual HWND Show(HWND hParent, HINSTANCE hInstance) = 0;
 
 

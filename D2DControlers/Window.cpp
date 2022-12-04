@@ -84,7 +84,6 @@ LRESULT Window::InternalWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM l
         BeginPaint(hwnd, &ps);
 
         while (isBusy);
-        isBusy = true;
         pRenderTarget->BeginDraw();
         pRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::WhiteSmoke));
         for (auto e : elements)
@@ -93,7 +92,9 @@ LRESULT Window::InternalWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM l
         }
         pRenderTarget->EndDraw();
         EndPaint(hwnd, &ps);
-        isBusy = false;
+        if (!hDrawThread)
+            hDrawThread = CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)Window::DrawThread,
+                (void*)this, NULL, nullptr);
         break;
     }
 
@@ -208,7 +209,40 @@ Animator& Window::GetAnimator()
     return animator;
 }
 
+MouseTracker& Window::GetMouseTracker()
+{
+    return mouseTracker;
+}
+
+void Window::RequestRedraw()
+{
+    isRedrawRequested = true;
+}
+
+void Window::ClearRedrawRequest()
+{
+    isRedrawRequested = false;
+}
+
+bool Window::IsRedrawRequested()
+{
+    return isRedrawRequested;
+}
+
 void Window::ChangeCursor(LPCSTR cursor) const
 {
     hCursor = LoadCursor(NULL, cursor);
+}
+
+DWORD __stdcall Window::DrawThread(Window* pWindow)
+{
+    while (true)
+    {
+        if (pWindow->IsRedrawRequested())
+        {
+            pWindow->Redraw();
+            pWindow->ClearRedrawRequest();
+        }
+        ::Sleep(0.01);
+    }
 }
