@@ -47,7 +47,7 @@ public:
 	{
 	}
 
-	virtual void Create(HINSTANCE hInstance, HWND hParent, ID2D1HwndRenderTarget* pRenderTarget) = 0;
+	virtual void Create(HINSTANCE hInstance, HWND hParent, ID2D1RenderTarget* pRenderTarget) = 0;
 
 	Geometry GetGeometry()
 	{
@@ -118,14 +118,14 @@ public:
 	virtual HWND Show(HWND hParent, HINSTANCE hInstance) = 0;
 
 
-	virtual void OnSizeChanged(ID2D1HwndRenderTarget* pRenderTarget)
+	virtual void OnSizeChanged(ID2D1RenderTarget* pRenderTarget)
 	{
 		Align(pRenderTarget);
 		Move(posX, posY);
 	}
 
 
-	void Align(ID2D1HwndRenderTarget* pRenderTarget)
+	void Align(ID2D1RenderTarget* pRenderTarget)
 	{
 		if (align == ALIGN_NONE)
 			return;
@@ -179,7 +179,7 @@ public:
 		Element::hParent = hParent;
 	}
 
-	virtual void OnPaint(ID2D1HwndRenderTarget* pRenderTarget) = 0;
+	virtual void OnPaint(ID2D1RenderTarget* pRenderTarget) = 0;
 
 
 	/// <summary>

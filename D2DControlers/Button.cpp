@@ -6,7 +6,7 @@ Button::Button(int x, int y, int width, int height, unsigned char align, const W
 {
 }
 
-void Button::Create(HINSTANCE hInstance, HWND hParent, ID2D1HwndRenderTarget* pRenderTarget)
+void Button::Create(HINSTANCE hInstance, HWND hParent, ID2D1RenderTarget * pRenderTarget)
 {
     CreateResources(pRenderTarget);
 }
@@ -35,7 +35,7 @@ static int getTextSize(const WCHAR* text)
     return i;
 }
 
-void Button::OnPaint(ID2D1HwndRenderTarget* pRenderTarget)
+void Button::OnPaint(ID2D1RenderTarget* pRenderTarget)
 {
     if(style.getTypeOfBrush() == SOLID_COLOR)
         pRenderTarget->FillRoundedRectangle(roundRect, pSolidColorBrush);
@@ -79,7 +79,7 @@ void Button::Raise(int eventId, void* args)
 }
 
 
-void Button::CreateResources(ID2D1HwndRenderTarget* pRenderTarget)
+void Button::CreateResources(ID2D1RenderTarget* pRenderTarget)
 {
     if (style.getTypeOfBrush() == SOLID_COLOR)
         pRenderTarget->CreateSolidColorBrush(style.getBackgroundColors()[0], &pSolidColorBrush);

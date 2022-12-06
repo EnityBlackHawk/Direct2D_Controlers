@@ -11,14 +11,14 @@ public:
 
 
 	// Inherited via Element
-	virtual void Create(HINSTANCE hInstance, HWND hParent, ID2D1HwndRenderTarget* pRenderTarget) override;
+	virtual void Create(HINSTANCE hInstance, HWND hParent, ID2D1RenderTarget* pRenderTarget) override;
 
 	virtual HWND Show(HWND hParent, HINSTANCE hInstance) override;
 
 	virtual void SetOpacity(float) override {}
 
-	void OnPaint(ID2D1HwndRenderTarget* pRenderTarget) override;
-	void CreateResources(ID2D1HwndRenderTarget* pRenderTarget);
+	void OnPaint(ID2D1RenderTarget* pRenderTarget) override;
+	void CreateResources(ID2D1RenderTarget* pRenderTarget);
 
 	void Move(int x, int y) override;
 	void SetColor(D2D1::ColorF color);

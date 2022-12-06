@@ -10,7 +10,7 @@ void Label::SetText(const WCHAR text[])
     Label::text = text;
 }
 
-void Label::Create(HINSTANCE hInstance, HWND hParent, ID2D1HwndRenderTarget* pRenderTarget)
+void Label::Create(HINSTANCE hInstance, HWND hParent, ID2D1RenderTarget * pRenderTarget)
 {
     CreateResources(pRenderTarget);
 }
@@ -31,7 +31,7 @@ HWND Label::Show(HWND hParent, HINSTANCE hInstance)
     return HWND();
 }
 
-void Label::OnPaint(ID2D1HwndRenderTarget* pRenderTarget)
+void Label::OnPaint(ID2D1RenderTarget* pRenderTarget)
 {
     pRenderTarget->DrawTextA(text, getTextSize(text), pWriteFormat, D2D1::Rect(posX, posY, width + posX, height + posY),
         pSolidColorBrush);
@@ -44,7 +44,7 @@ int Label::getTextSize(const WCHAR* text)
     return i;
 }
 
-void Label::CreateResources(ID2D1HwndRenderTarget* pRenderTarget)
+void Label::CreateResources(ID2D1RenderTarget* pRenderTarget)
 {
     pRenderTarget->CreateSolidColorBrush(style.getForegroundColor(), &pSolidColorBrush);
 

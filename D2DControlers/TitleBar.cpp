@@ -6,7 +6,7 @@ TitleBar::TitleBar(int x, int y, int width, int height, unsigned char align, Ele
 {
 }
 
-void TitleBar::Create(HINSTANCE hInstance, HWND hParent, ID2D1HwndRenderTarget* pRenderTarget)
+void TitleBar::Create(HINSTANCE hInstance, HWND hParent, ID2D1RenderTarget * pRenderTarget)
 {
     CreateResources(pRenderTarget);
 }
@@ -25,13 +25,18 @@ HWND TitleBar::Show(HWND hParent, HINSTANCE hInstance)
     return HWND();
 }
 
-void TitleBar::OnPaint(ID2D1HwndRenderTarget* pRenderTarget)
+void TitleBar::OnPaint(ID2D1RenderTarget* pRenderTarget)
 {
     pRenderTarget->FillRoundedRectangle(&roundRect, pSolidColorBrush);
 }
 
+void TitleBar::ExOnPaint(ID2D1RenderTarget* pRenderTarger)
+{
+    pRenderTarger->FillRoundedRectangle(&roundRect, pSolidColorBrush);
+}
 
-void TitleBar::CreateResources(ID2D1HwndRenderTarget* pRenderTarger)
+
+void TitleBar::CreateResources(ID2D1RenderTarget* pRenderTarger)
 {
     if (style.getTypeOfBrush() == SOLID_COLOR)
         pRenderTarger->CreateSolidColorBrush(style.getBackgroundColors()[0], &pSolidColorBrush);

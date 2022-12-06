@@ -22,7 +22,7 @@ Frame::Frame(int x, int y, int width, int height, unsigned char align, ElementSt
     handCursor = LoadCursor(NULL, IDC_HAND);
 }
 
-void Frame::Create(HINSTANCE hInstance, HWND hParent, ID2D1HwndRenderTarget* pRenderTarget)
+void Frame::Create(HINSTANCE hInstance, HWND hParent, ID2D1RenderTarget * pRenderTarget)
 {
     //CreateWnd(posX, posY, width, height, "RoundRect", hInstance, WS_CHILD, hParent, this);
     CreateResources(pRenderTarget);
@@ -34,7 +34,7 @@ HWND Frame::Show(HWND hParent, HINSTANCE hInstance)
     return hwnd;
 }
 
-void Frame::OnPaint(ID2D1HwndRenderTarget* pRenderTarget)
+void Frame::OnPaint(ID2D1RenderTarget* pRenderTarget)
 {
 
     if(style.getTypeOfBrush() == SOLID_COLOR)
@@ -44,7 +44,7 @@ void Frame::OnPaint(ID2D1HwndRenderTarget* pRenderTarget)
     
 }
 
-void Frame::CreateResources(ID2D1HwndRenderTarget* pRenderTarget)
+void Frame::CreateResources(ID2D1RenderTarget* pRenderTarget)
 {
     if(style.getTypeOfBrush() == SOLID_COLOR)
         pRenderTarget->CreateSolidColorBrush(style.getBackgroundColors()[0], &pSolidColorBrush);

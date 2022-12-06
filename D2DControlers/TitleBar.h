@@ -9,7 +9,7 @@ public:
 	TitleBar(int x, int y, int width, int height, unsigned char align, ElementStyle style);
 
 	// Inherited via Element
-	virtual void Create(HINSTANCE hInstance, HWND hParent, ID2D1HwndRenderTarget* pRenderTarget) override;
+	virtual void Create(HINSTANCE hInstance, HWND hParent, ID2D1RenderTarget* pRenderTarget) override;
 
 	virtual void SetOpacity(float opacity) override;
 
@@ -17,11 +17,12 @@ public:
 
 	virtual HWND Show(HWND hParent, HINSTANCE hInstance) override;
 
-	virtual void OnPaint(ID2D1HwndRenderTarget* pRenderTarget) override;
+	virtual void OnPaint(ID2D1RenderTarget* pRenderTarget) override;
 
-private:
+	void ExOnPaint(ID2D1RenderTarget* pRenderTarger);
 
-	void CreateResources(ID2D1HwndRenderTarget* pRenderTarger);
+
+	void CreateResources(ID2D1RenderTarget* pRenderTarger);
 
 	D2D1_ROUNDED_RECT roundRect;
 	ID2D1SolidColorBrush* pSolidColorBrush;
