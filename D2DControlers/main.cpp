@@ -28,7 +28,7 @@ void opacityIn(float delta)
 	pB->SetOpacity(delta);
 	window->RequestRedraw();
 	//if (delta > 0.9f)
-	//	pB->SetActivate(true);
+	pB->SetActivate(true);
 }
 
 void moveAni(float delta)
@@ -50,7 +50,8 @@ void moveAni(float delta)
 
 LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	return window->InternalWindowProc(hwnd, uMsg, wParam, lParam);
+	if(window)
+		return window->InternalWindowProc(hwnd, uMsg, wParam, lParam);
 }
 
 void eventTest(void* sender, void* args)
@@ -69,26 +70,31 @@ void eventTestOut(void* sender, void* args)
 void eventClick(void* sender, void* args)
 {
 	pB->SetAlign(ALIGN_NONE);
-	//pB->SetActivate(false);
+	pB->SetActivate(false);
 	window->GetAnimator().StartAnimation(2);
 }
 
+void moveWithMouse(void* sender, void* args)
+{
+	coord* c = (coord*)args;
+	pB->Move(c->x, c->y);
+	window->RequestRedraw();
+}
 
 BOOL WinMain(HINSTANCE hInstance, HINSTANCE hIgnore, PSTR lpCmdLine, INT nCmdShow)
 {
-	window = new Window("Teste", hInstance, WinProc, { RGB(255,255,255), RGB(0, 0, 0), RGB(0, 0, 0), RGB(0, 0, 0) });
+	window = new Window("Teste", hInstance, WinProc, { RGB(255,255,255), RGB(255, 0, 0), RGB(0, 0, 0), RGB(0, 0, 0) });
 
 	ElementStyle style(LINEAR_GRADIENT, { 0x451057, 0xa36110 }, 0, 0, 0);
 
 	Frame f(20, 20, 100, 100, ALIGN_STREACH, style);
 
 	ElementStyle s2(SOLID_COLOR, {D2D1::ColorF(0xFFFFFF, 0.75f)}, NULL, 10, NULL, 0 );
-	Button b(AUTO, AUTO, AUTO, 50, ALIGN_CENTER, L"Teste", s2);
+	Button b(100, 100, AUTO, 50, ALIGN_NONE, L"Teste", s2);
 	b.margin = { 0, 0, b.GetWidth() / 2 + 5, 0 };
 
 	pB = &b;
-	//b.AddEvent(ON_MOUSE_HOVER, eventTest);
-	//b.AddEvent(ON_MOUSE_HOVER_OUT, eventTestOut);
+
 	b.AddEvent(ON_MOUSE_HOVER, eventClick);
 
 	Button b2(AUTO, AUTO, AUTO, 50, ALIGN_CENTER, L"Teste2", s2);
@@ -102,8 +108,6 @@ BOOL WinMain(HINSTANCE hInstance, HINSTANCE hIgnore, PSTR lpCmdLine, INT nCmdSho
 	window->AddElement(l);
 	window->AddElement(b2, true);
 	window->AddElement(b, true);
-
-
 
 	window->GetAnimator().AddAnimation(animation, 0.5f, 1.0f, 250, &b);
 	window->GetAnimator().AddAnimation(animation, 1.0f, 0.5f, 250, &b);

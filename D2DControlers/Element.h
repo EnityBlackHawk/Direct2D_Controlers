@@ -163,6 +163,14 @@ public:
 			posY = margin.top;
 
 		}
+
+		else if (align == ALIGN_HORIZONTAL_STREACH)
+		{
+			D2D1_SIZE_F size = pRenderTarget->GetSize();
+			width = size.width - (margin.left + margin.right);
+
+			posX = margin.left;
+		}
 		
 	}
 
@@ -198,7 +206,6 @@ protected:
 	HWND hwnd;
 	HWND hParent;
 	unsigned char align;
-	ID2D1HwndRenderTarget* pRenderTarget;
 	std::unordered_map<int, EVENT> events;
 };
 

@@ -139,6 +139,7 @@
     <ClInclude Include="IParentable.h" />
     <ClInclude Include="Label.h" />
     <ClInclude Include="MouseTracker.h" />
+    <ClInclude Include="TitleBar.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
@@ -149,6 +150,7 @@
     <ClCompile Include="Label.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MouseTracker.cpp" />
+    <ClCompile Include="TitleBar.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

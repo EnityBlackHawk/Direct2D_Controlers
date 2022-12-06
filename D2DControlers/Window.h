@@ -6,6 +6,7 @@
 #include <d2d1.h>
 #include "MouseTracker.h"
 #include "Animator.h"
+#include "TitleBar.h"
 
 #pragma comment(lib, "d2d1")
 
@@ -25,8 +26,8 @@ public:
 
 	LRESULT CALLBACK InternalWindowProc(HWND hwnd, UINT uMgs, WPARAM wParam, LPARAM lParam);
 
-	void Redraw() const;
-	void Show() const;
+	void Redraw();
+	void Show();
 	void AddElement(Element& rElement, bool enableMouseEvents = false);
 	int GetActualWidth() const;
 	int GetActualHeight() const;
@@ -45,16 +46,21 @@ public:
 	static DWORD WINAPI DrawThread(Window* pWindow);
 
 private:
+
+
 	HWND hwnd;
 	HINSTANCE hInstance;
 	const char* name;
 	MainWindowSyle style;
 	std::vector<Element*> elements;
 
+
 	ID2D1HwndRenderTarget* pRenderTarget;
 	ID2D1Factory* pFactory;
 	MouseTracker mouseTracker;
 	Animator animator;
+
+	TitleBar titleBar;
 
 	HANDLE hDrawThread;
 

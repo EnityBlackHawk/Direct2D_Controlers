@@ -2,6 +2,11 @@
 #include <vector>
 #include "Element.h"
 
+struct coord
+{
+	int x;
+	int y;
+};
 
 class MouseTracker
 {
