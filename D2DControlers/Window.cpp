@@ -69,7 +69,7 @@ LRESULT HitTestNCA(HWND hWnd, WPARAM wParam, LPARAM lParam)
 
 Window::Window(const char* name, HINSTANCE hInstance, WNDPROC windowProcedure, MainWindowSyle colorStyle, DWORD style, DWORD styleEx) :
     name(name), style(colorStyle), hInstance(hInstance), hCursor(LoadCursor(NULL, IDC_ARROW)),
-    titleBar(0, 0, AUTO, 30, ALIGN_HORIZONTAL_STREACH, ElementStyle(0xFFFFFF, 0x0, 0, 0, 0))
+    titleBar(0, 0, AUTO, 30, ALIGN_HORIZONTAL_STREACH, ElementStyle(SOLID_COLOR, {D2D1::ColorF(0xFFFFFF, 0.5f)}, D2D1::ColorF(0x0), 0, D2D1::ColorF(0x0), 0))
 {
     elements = {};
     
@@ -128,8 +128,45 @@ LRESULT Window::InternalWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM l
 {
     LRESULT lR = 0;
     bool bResult =  DwmDefWindowProc(hwnd, uMsg, wParam, lParam, &lR);
+    
     if (bResult)
+    {
+        std::ostringstream os;
+        os << "lR: " << lR << std::endl;
+        OutputDebugString(os.str().c_str());
+
+        if (lR == 20)
+        {
+            if(isSysNavHover)
+                titleBar.ResetHover();
+
+            isSysNavHover = true;
+            titleBar.hoverCloseButton();
+            RequestRedraw();
+        }
+
+        else if (lR == 9)
+        {
+            if (isSysNavHover)
+                titleBar.ResetHover();
+
+            isSysNavHover = true;
+            titleBar.hoverMaxButton();
+            RequestRedraw();
+        }
+
+        else if (lR == 8)
+        {
+            if (isSysNavHover)
+                titleBar.ResetHover();
+
+            isSysNavHover = true;
+            titleBar.hoverMinButton();
+            RequestRedraw();
+        }
+
         return lR;
+    }
 
 
     switch (uMsg)
@@ -240,7 +277,7 @@ LRESULT Window::InternalWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM l
             }
             titleBar.OnSizeChanged(pContext);
 
-           // RequestRedraw();
+            RedrawWindow(hwnd, NULL, NULL, RDW_INVALIDATE | RDW_ERASE);
 
         }
         break;
@@ -259,12 +296,13 @@ LRESULT Window::InternalWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM l
     }
     case WM_MOUSEMOVE:
     {
+        if (isSysNavHover)
+        {
+            titleBar.ResetHover();
+            isSysNavHover = false;
+            RequestRedraw();
+        }
 
-        std::ostringstream os;
-        os << "MOUSEMOVE: " << LOWORD(lParam) << "x" << HIWORD(lParam) << std::endl;;
-        OutputDebugString(os.str().c_str());
-
-        
         mouseTracker.SetMousePosition(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
         mouseTracker.Procedure();
         break;
@@ -381,6 +419,7 @@ bool Window::IsRedrawRequested()
 void Window::ChangeCursor(LPCSTR cursor) const
 {
     hCursor = LoadCursor(NULL, cursor);
+    
 }
 
 DWORD __stdcall Window::DrawThread(Window* pWindow)
@@ -389,7 +428,7 @@ DWORD __stdcall Window::DrawThread(Window* pWindow)
     {
         if (pWindow->IsRedrawRequested())
         {
-            pWindow->Redraw();
+            RedrawWindow(pWindow->GetHwnd(), NULL, NULL, RDW_INVALIDATE | RDW_ERASE);
             pWindow->ClearRedrawRequest();
         }
         ::Sleep(0.01);

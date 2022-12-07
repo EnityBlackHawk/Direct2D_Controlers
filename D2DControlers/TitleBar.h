@@ -1,7 +1,10 @@
 #pragma once
 #include "Element.h"
 #include <d2d1.h>
+#include <wincodec.h>
 #include "ElementStyle.h"
+
+#pragma comment(lib, "windowscodecs.lib")
 
 class TitleBar : public Element
 {
@@ -21,11 +24,25 @@ public:
 
 	void ExOnPaint(ID2D1RenderTarget* pRenderTarger);
 
+	void hoverCloseButton();
+	void hoverMaxButton();
+	void hoverMinButton();
+	void ResetHover();
 
 	void CreateResources(ID2D1RenderTarget* pRenderTarger);
 
 	D2D1_ROUNDED_RECT roundRect;
+
+	ID2D1SolidColorBrush* closeButtonBrush;
+	ID2D1SolidColorBrush* maxButtonBrush;
+	ID2D1SolidColorBrush* minButtonBrush;
+
 	ID2D1SolidColorBrush* pSolidColorBrush;
+
+	IWICImagingFactory* pImagingFactory;
+	ID2D1Bitmap* pBitmap;
+
+
 	ElementStyle style;
 };
 

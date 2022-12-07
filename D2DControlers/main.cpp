@@ -83,7 +83,7 @@ void moveWithMouse(void* sender, void* args)
 
 BOOL WinMain(HINSTANCE hInstance, HINSTANCE hIgnore, PSTR lpCmdLine, INT nCmdShow)
 {
-	window = new Window("Teste", hInstance, WinProc, { RGB(255,255,255), RGB(255, 0, 0), RGB(0, 0, 0), RGB(0, 0, 0) });
+	window = new Window("Teste", hInstance, WinProc, { RGB(255,255,255), RGB(0, 0, 0), RGB(0, 0, 0), RGB(0, 0, 0) });
 
 	ElementStyle style(LINEAR_GRADIENT, { 0x451057, 0xa36110 }, 0, 0, 0);
 

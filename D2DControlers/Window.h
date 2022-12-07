@@ -90,5 +90,6 @@ private:
 
 	mutable HCURSOR hCursor;
 	mutable bool isBusy = false;
+	mutable bool isSysNavHover = false;
 };
 
