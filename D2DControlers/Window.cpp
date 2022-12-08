@@ -69,7 +69,7 @@ LRESULT HitTestNCA(HWND hWnd, WPARAM wParam, LPARAM lParam)
 
 Window::Window(const char* name, HINSTANCE hInstance, WNDPROC windowProcedure, MainWindowSyle colorStyle, DWORD style, DWORD styleEx) :
     name(name), style(colorStyle), hInstance(hInstance), hCursor(LoadCursor(NULL, IDC_ARROW)),
-    titleBar(0, 0, AUTO, 30, ALIGN_HORIZONTAL_STREACH, ElementStyle(0xFFFFFF, 0x0, 0, 0, 0))
+    titleBar(0, 0, AUTO, 30, ALIGN_HORIZONTAL_STREACH, ElementStyle(SOLID_COLOR, {D2D1::ColorF(0xFFFFFF, 0.5f)}, D2D1::ColorF(0x0), 0, D2D1::ColorF(0x0), 0))
 {
     elements = {};
     
@@ -113,20 +113,60 @@ Window::Window(const char* name, HINSTANCE hInstance, WNDPROC windowProcedure, M
 
     D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &pFactory);
 
+    /*
     RECT rc;
     GetClientRect(hwnd, &rc);
 
-    D2D1_SIZE_U size = D2D1::SizeU(rc.right, rc.bottom);
+    D2D1_SIZE_U size = D2D1::SizeU(rc.right, rc.bottom);*/
 
-    pFactory->CreateHwndRenderTarget(D2D1::RenderTargetProperties(), D2D1::HwndRenderTargetProperties(hwnd, size), &pRenderTarget);
+    //pFactory->CreateHwndRenderTarget(D2D1::RenderTargetProperties(), D2D1::HwndRenderTargetProperties(hwnd, size), &pRenderTarget);
+
+    CreateDirectXResources();
 }
 
 LRESULT Window::InternalWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     LRESULT lR = 0;
     bool bResult =  DwmDefWindowProc(hwnd, uMsg, wParam, lParam, &lR);
+    
     if (bResult)
+    {
+        std::ostringstream os;
+        os << "lR: " << lR << std::endl;
+        OutputDebugString(os.str().c_str());
+
+        if (lR == 20)
+        {
+            if(isSysNavHover)
+                titleBar.ResetHover();
+
+            isSysNavHover = true;
+            titleBar.hoverCloseButton();
+            RequestRedraw();
+        }
+
+        else if (lR == 9)
+        {
+            if (isSysNavHover)
+                titleBar.ResetHover();
+
+            isSysNavHover = true;
+            titleBar.hoverMaxButton();
+            RequestRedraw();
+        }
+
+        else if (lR == 8)
+        {
+            if (isSysNavHover)
+                titleBar.ResetHover();
+
+            isSysNavHover = true;
+            titleBar.hoverMinButton();
+            RequestRedraw();
+        }
+
         return lR;
+    }
 
 
     switch (uMsg)
@@ -197,14 +237,15 @@ LRESULT Window::InternalWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM l
 
 
         while (isBusy);
-        pRenderTarget->BeginDraw();
-        pRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::WhiteSmoke));
+        pContext->BeginDraw();
+        pContext->Clear(D2D1::ColorF(D2D1::ColorF::WhiteSmoke));
         for (auto e : elements)
         {
-            e->OnPaint(pRenderTarget);
+            e->OnPaint(pContext);
         }
-        titleBar.OnPaint(pRenderTarget);
-        pRenderTarget->EndDraw();
+        titleBar.ExOnPaint(pContext);
+        pContext->EndDraw();
+        pSwapChain->Present(1, 0);
         EndPaint(hwnd, &ps);
         if (!hDrawThread)
             hDrawThread = CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)Window::DrawThread,
@@ -219,15 +260,24 @@ LRESULT Window::InternalWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM l
         GetClientRect(hwnd, &rc);
 
         D2D1_SIZE_U size = D2D1::SizeU(rc.right, rc.bottom);
-        if (pRenderTarget)
+        if (pContext)
         {
-            pRenderTarget->Resize(size);
+            DXGI_MODE_DESC md = {};
+            md.Width = rc.right - rc.left;
+            md.Height = rc.bottom - rc.top;
+
+            ReleaseSwapChainDependencies();
+        
+            HRESULT hr = pSwapChain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, 0);
+            CreateBuffers();
+
             for (auto e : elements)
             {
-                e->OnSizeChanged(pRenderTarget);
+                e->OnSizeChanged(pContext);
             }
-            titleBar.OnSizeChanged(pRenderTarget);
-            RequestRedraw();
+            titleBar.OnSizeChanged(pContext);
+
+            RedrawWindow(hwnd, NULL, NULL, RDW_INVALIDATE | RDW_ERASE);
 
         }
         break;
@@ -246,12 +296,13 @@ LRESULT Window::InternalWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM l
     }
     case WM_MOUSEMOVE:
     {
+        if (isSysNavHover)
+        {
+            titleBar.ResetHover();
+            isSysNavHover = false;
+            RequestRedraw();
+        }
 
-        std::ostringstream os;
-        os << "MOUSEMOVE: " << LOWORD(lParam) << "x" << HIWORD(lParam) << std::endl;;
-        OutputDebugString(os.str().c_str());
-
-        
         mouseTracker.SetMousePosition(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
         mouseTracker.Procedure();
         break;
@@ -275,14 +326,15 @@ void Window::Redraw()
 {
     while (isBusy);
     isBusy = true;
-    pRenderTarget->BeginDraw();
-    pRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::WhiteSmoke));
+    pContext->BeginDraw();
+    pContext->Clear(D2D1::ColorF(D2D1::ColorF::WhiteSmoke));
     for (auto e : elements)
     {
-        e->OnPaint(pRenderTarget);
+        e->OnPaint(pContext);
     }
-    titleBar.OnPaint(pRenderTarget);
-    pRenderTarget->EndDraw();
+    titleBar.ExOnPaint(pContext);
+    pContext->EndDraw();
+    pSwapChain->Present(1, 0);
     isBusy = false;
 }
 
@@ -290,11 +342,11 @@ void Window::Show()
 {
     for (auto e : elements)
     {
-        e->Align(pRenderTarget);
-        e->Create(hInstance, hwnd, pRenderTarget);
+        e->Align(pContext);
+        e->Create(hInstance, hwnd, pContext);
     }
-    titleBar.Align(pRenderTarget);
-    titleBar.Create(hInstance, hwnd, pRenderTarget);
+    titleBar.Align(pContext);
+    titleBar.Create(hInstance, hwnd, pContext);
 
     ShowWindow(hwnd, 10);
     MSG msg = {};
@@ -367,6 +419,7 @@ bool Window::IsRedrawRequested()
 void Window::ChangeCursor(LPCSTR cursor) const
 {
     hCursor = LoadCursor(NULL, cursor);
+    
 }
 
 DWORD __stdcall Window::DrawThread(Window* pWindow)
@@ -375,9 +428,119 @@ DWORD __stdcall Window::DrawThread(Window* pWindow)
     {
         if (pWindow->IsRedrawRequested())
         {
-            pWindow->Redraw();
+            RedrawWindow(pWindow->GetHwnd(), NULL, NULL, RDW_INVALIDATE | RDW_ERASE);
             pWindow->ClearRedrawRequest();
         }
         ::Sleep(0.01);
     }
+}
+
+void Window::CreateDirectXResources()
+{
+    // This flag adds support for surfaces with a different color channel ordering than the API default.
+    // You need it for compatibility with Direct2D.
+    UINT creationFlags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
+
+    // This array defines the set of DirectX hardware feature levels this app  supports.
+    // The ordering is important and you should  preserve it.
+    // Don't forget to declare your app's minimum required feature level in its
+    // description.  All apps are assumed to support 9.1 unless otherwise stated.
+    D3D_FEATURE_LEVEL featureLevels[] =
+    {
+        D3D_FEATURE_LEVEL_11_1,
+        D3D_FEATURE_LEVEL_11_0,
+        D3D_FEATURE_LEVEL_10_1,
+        D3D_FEATURE_LEVEL_10_0,
+        D3D_FEATURE_LEVEL_9_3,
+        D3D_FEATURE_LEVEL_9_2,
+        D3D_FEATURE_LEVEL_9_1
+    };
+
+    D3D11CreateDevice(
+        nullptr,
+        D3D_DRIVER_TYPE_HARDWARE,
+        0,
+        creationFlags,
+        featureLevels,
+        ARRAYSIZE(featureLevels),
+        D3D11_SDK_VERSION,
+        &pD3DDevice,
+        nullptr,
+        &pD3Dcontext
+    );
+
+    Microsoft::WRL::ComPtr<IDXGIDevice4> dxgiDevice;
+    pD3DDevice.As(&dxgiDevice);
+
+    pFactory->CreateDevice(dxgiDevice.Get(), &pDevice);
+
+    pDevice->CreateDeviceContext(D2D1_DEVICE_CONTEXT_OPTIONS_NONE, &pContext);
+    
+
+    DXGI_SWAP_CHAIN_DESC1 swapChainDesc = { 0 };
+    swapChainDesc.Width = 0;
+    swapChainDesc.Height = 0;
+    swapChainDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+    swapChainDesc.Stereo = false;
+    swapChainDesc.SampleDesc.Count = 1;
+    swapChainDesc.SampleDesc.Quality = 0;
+    swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+    swapChainDesc.BufferCount = 2;
+    swapChainDesc.Scaling = DXGI_SCALING_NONE;
+    swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
+    swapChainDesc.Flags = 0;
+
+    Microsoft::WRL::ComPtr<IDXGIAdapter> dxgiAdapter;
+    dxgiDevice->GetAdapter(&dxgiAdapter);
+
+    Microsoft::WRL::ComPtr<IDXGIFactory2> dxgiFactory;
+    dxgiAdapter->GetParent(IID_PPV_ARGS(&dxgiFactory));
+
+    HRESULT hr =  dxgiFactory->CreateSwapChainForHwnd(
+        pD3DDevice.Get(),
+        hwnd,
+        &swapChainDesc,
+        nullptr,
+        nullptr,
+        &pSwapChain
+    );
+
+    dxgiDevice->SetMaximumFrameLatency(1);
+
+    CreateBuffers();
+
+}
+
+void Window::ReleaseSwapChainDependencies()
+{
+
+    pContext->SetTarget(nullptr);
+    pBackBuffer->Release();
+    pDxgiBackBuffer->Release();
+    pBitmap->Release();
+}
+
+void Window::CreateBuffers()
+{
+ 
+    
+        pSwapChain->GetBuffer(0, IID_PPV_ARGS(&pBackBuffer));
+
+        D2D1_BITMAP_PROPERTIES1 bitmapProperties =
+            D2D1::BitmapProperties1(
+                D2D1_BITMAP_OPTIONS_TARGET | D2D1_BITMAP_OPTIONS_CANNOT_DRAW,
+                D2D1::PixelFormat(DXGI_FORMAT_B8G8R8A8_UNORM, D2D1_ALPHA_MODE_IGNORE)
+            );
+
+        pSwapChain->GetBuffer(0, IID_PPV_ARGS(&pDxgiBackBuffer));
+
+        pContext->CreateBitmapFromDxgiSurface(
+            pDxgiBackBuffer,
+            &bitmapProperties,
+            &pBitmap
+        );
+
+        pContext->SetTarget(pBitmap);
+    
+   
 }

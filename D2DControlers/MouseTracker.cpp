@@ -15,12 +15,6 @@ bool MouseTracker::IsInBound(Geometry g)
 
 void MouseTracker::Procedure()
 {
-	std::ostringstream os;
-	os << "MouseTracker: " << mouseX << "x" << mouseY << "\n";
-	OutputDebugString(os.str().c_str());
-
-
-
 	int lastX = 0;
 	int lastY = 0;
 

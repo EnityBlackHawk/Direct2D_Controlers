@@ -15,7 +15,7 @@ public:
 
 
 	// Inherited via Element
-	virtual void Create(HINSTANCE hInstance, HWND hParent, ID2D1HwndRenderTarget* pRenderTarget) override;
+	virtual void Create(HINSTANCE hInstance, HWND hParent, ID2D1RenderTarget* pRenderTarget) override;
 
 	virtual void SetOpacity(float opacity) override;
 
@@ -23,13 +23,13 @@ public:
 
 	virtual HWND Show(HWND hParent, HINSTANCE hInstance) override;
 
-	virtual void OnPaint(ID2D1HwndRenderTarget* pRenderTarget) override;
+	virtual void OnPaint(ID2D1RenderTarget* pRenderTarget) override;
 
 	static int getTextSize(const WCHAR* text);
 
 private:
 
-	void CreateResources(ID2D1HwndRenderTarget* pRenderTarget);
+	void CreateResources(ID2D1RenderTarget* pRenderTarget);
 
 	ElementStyle style;
 	ID2D1SolidColorBrush* pSolidColorBrush;

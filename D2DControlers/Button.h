@@ -14,13 +14,13 @@ public:
 
 
 	// Inherited via Element
-	virtual void Create(HINSTANCE hInstance, HWND hParent, ID2D1HwndRenderTarget* pRenderTarget) override;
+	virtual void Create(HINSTANCE hInstance, HWND hParent, ID2D1RenderTarget* pRenderTarget) override;
 
 	virtual void Move(int x, int y) override;
 
 	virtual HWND Show(HWND hParent, HINSTANCE hInstance) override;
 
-	virtual void OnPaint(ID2D1HwndRenderTarget* pRenderTarget) override;
+	virtual void OnPaint(ID2D1RenderTarget* pRenderTarget) override;
 
 	virtual void SetOpacity(float opacity) override;
 
@@ -34,7 +34,7 @@ public:
 
 private:
 
-	void CreateResources(ID2D1HwndRenderTarget* pRenderTarget);
+	void CreateResources(ID2D1RenderTarget* pRenderTarget);
 
 	ElementStyle style;
 	D2D1_ROUNDED_RECT roundRect;
