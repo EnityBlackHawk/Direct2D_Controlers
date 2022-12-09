@@ -59,6 +59,13 @@ public:
 	{
 		events[eventId] = action;
 	}
+	void RemoveEvent(int eventId)
+	{
+		if (events.contains(eventId))
+		{
+			events.erase(eventId);
+		}
+	}
 
 	virtual void Raise(int eventId, void* args)
 	{
