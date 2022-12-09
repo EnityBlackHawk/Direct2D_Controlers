@@ -34,6 +34,14 @@ HWND Frame::Show(HWND hParent, HINSTANCE hInstance)
     return hwnd;
 }
 
+void Frame::SetOpacity(float opacity)
+{
+    if (pSolidColorBrush)
+        pSolidColorBrush->SetOpacity(opacity);
+    if (pLinearGradientBrush)
+        pLinearGradientBrush->SetOpacity(opacity);
+}
+
 void Frame::OnPaint(ID2D1RenderTarget* pRenderTarget)
 {
 

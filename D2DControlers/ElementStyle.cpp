@@ -1,6 +1,6 @@
 #include "ElementStyle.h"
 
-ElementStyle::ElementStyle(unsigned char typeOfBrush, std::vector<D2D1::ColorF> backgroundColors, D2D1::ColorF foregroundColor, float cornerRadius, D2D1::ColorF borderColor, float borderThickeness):
+ElementStyle::ElementStyle(unsigned char typeOfBrush, const std::vector<D2D1::ColorF> backgroundColors, D2D1::ColorF foregroundColor, float cornerRadius, D2D1::ColorF borderColor, float borderThickeness):
     typeOfBrush(typeOfBrush), backgroundColors(backgroundColors), foregroundColor(foregroundColor), borderColor(borderColor), borderThickness(borderThickeness), cornerRadius(cornerRadius)
 {
 }

@@ -9,7 +9,7 @@
 class ElementStyle
 {
 public:
-	ElementStyle(unsigned char typeOfBrush, std::vector<D2D1::ColorF> backgroundColors, D2D1::ColorF foregroundColor, float cornerRadius, D2D1::ColorF borderColor, float borderThickness);
+	ElementStyle(unsigned char typeOfBrush, const std::vector<D2D1::ColorF> backgroundColors, D2D1::ColorF foregroundColor, float cornerRadius, D2D1::ColorF borderColor, float borderThickness);
 	ElementStyle(unsigned char typeOfBrush, const std::vector<unsigned int>& backgroundColors, unsigned int foregroundColor, float cornerRadius, unsigned int borderColor = 0, float borderThickness = 0);
 	ElementStyle(unsigned int backgroundColors, unsigned int foregroundColor, float cornerRadius, unsigned int borderColor, float borderThickness);
 

@@ -41,6 +41,8 @@ public:
 	HWND GetHwnd() const;
 	Animator& GetAnimator();
 	MouseTracker& GetMouseTracker();
+	const RECT& GetRect() const;
+	
 
 	void RequestRedraw();
 	void ClearRedrawRequest();

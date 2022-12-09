@@ -131,9 +131,6 @@ LRESULT Window::InternalWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM l
     
     if (bResult)
     {
-        std::ostringstream os;
-        os << "lR: " << lR << std::endl;
-        OutputDebugString(os.str().c_str());
 
         if (lR == 20)
         {
@@ -399,6 +396,13 @@ Animator& Window::GetAnimator()
 MouseTracker& Window::GetMouseTracker()
 {
     return mouseTracker;
+}
+
+const RECT& Window::GetRect() const
+{
+    RECT r;
+    GetWindowRect(hwnd, &r);
+    return r;
 }
 
 void Window::RequestRedraw()

@@ -76,7 +76,7 @@ void TitleBar::CreateResources(ID2D1RenderTarget* pRenderTarger)
         IID_IWICImagingFactory,
         (LPVOID*)&pImagingFactory
     );
-
+    
     IWICBitmapDecoder* pDecoder = nullptr;
     IWICBitmapFrameDecode* pSource = nullptr;
     IWICStream* pStream = nullptr;
@@ -115,5 +115,11 @@ void TitleBar::CreateResources(ID2D1RenderTarget* pRenderTarger)
     pRenderTarger->CreateSolidColorBrush(D2D1::ColorF(0xFFFFFF), &maxButtonBrush);
     pRenderTarger->CreateSolidColorBrush(D2D1::ColorF(0x0000FF), &minButtonBrush);
     ResetHover();
+
+
+    pDecoder->Release();
+    pSource->Release();
+    pConverter->Release();
     
+    CoUninitialize();
 }

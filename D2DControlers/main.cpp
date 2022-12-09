@@ -5,10 +5,12 @@
 #include "Frame.h"
 #include "Button.h"
 #include "Label.h"
+#include "Image.h"
 
 Window* window;
 Frame* rf;
 Button* pB;
+Button* pY;
 
 std::default_random_engine generator;
 
@@ -44,7 +46,7 @@ void moveAni(float delta)
 		pB->Move(distributionX(generator), distributionY(generator));
 		indexPOS++;
 		window->GetMouseTracker().Procedure();
-		window->GetAnimator().StartAnimation(3);
+		window->GetAnimator().StartAnimation(1);
 	}
 }
 
@@ -54,24 +56,16 @@ LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		return window->InternalWindowProc(hwnd, uMsg, wParam, lParam);
 }
 
-void eventTest(void* sender, void* args)
-{
-	//SetCursor(((Button*)sender)->getCursor());
-	//window->ChangeCursor(IDC_HAND);
-	//->GetAnimator().StartAnimation(0);
-}
-
-void eventTestOut(void* sender, void* args)
-{
-	//window->GetAnimator().StartAnimation(1);
-	//window->ChangeCursor(IDC_ARROW);
-}
-
 void eventClick(void* sender, void* args)
 {
 	pB->SetAlign(ALIGN_NONE);
 	pB->SetActivate(false);
-	window->GetAnimator().StartAnimation(2);
+	window->GetAnimator().StartAnimation(0);
+	/*SetCursorPos(
+		(pY->GetPosX() + pY->GetWidth() / 2) + window->GetRect().left,
+		(pY->GetPosY() + pY->GetHeight() / 2) + window->GetRect().top
+	);*/
+
 }
 
 void moveWithMouse(void* sender, void* args)
@@ -84,9 +78,12 @@ void moveWithMouse(void* sender, void* args)
 BOOL WinMain(HINSTANCE hInstance, HINSTANCE hIgnore, PSTR lpCmdLine, INT nCmdShow)
 {
 	window = new Window("Teste", hInstance, WinProc, { RGB(255,255,255), RGB(0, 0, 0), RGB(0, 0, 0), RGB(0, 0, 0) });
+	
+	Image i(AUTO, AUTO, AUTO, AUTO, ALIGN_STREACH, L"E:\\Downloads\\e2272d6ba9565d84b624496d1d54b6ccf2b8d4df.jpg");
+
 
 	ElementStyle style(LINEAR_GRADIENT, { 0x451057, 0xa36110 }, 0, 0, 0);
-
+	
 	Frame f(20, 20, 100, 100, ALIGN_STREACH, style);
 
 	ElementStyle s2(SOLID_COLOR, {D2D1::ColorF(0xFFFFFF, 0.75f)}, NULL, 10, NULL, 0 );
@@ -99,20 +96,21 @@ BOOL WinMain(HINSTANCE hInstance, HINSTANCE hIgnore, PSTR lpCmdLine, INT nCmdSho
 
 	Button b2(AUTO, AUTO, AUTO, 50, ALIGN_CENTER, L"Teste2", s2);
 	b2.margin = { b.GetWidth() / 2 + 5, 0, 0, 0 };
-
+	pY = &b2;
 
 	Label l(0, 0, AUTO, AUTO, ALIGN_CENTER, L"Label", 30, ElementStyle(0, 0xFFFFFF, 0, 0, 0));
 	l.margin = { 0, 0, 0, b2.GetHeight() + 10 };
 
+	window->AddElement(i);
 	window->AddElement(f);
 	window->AddElement(l);
 	window->AddElement(b2, true);
 	window->AddElement(b, true);
 
-	window->GetAnimator().AddAnimation(animation, 0.5f, 1.0f, 250, &b);
-	window->GetAnimator().AddAnimation(animation, 1.0f, 0.5f, 250, &b);
 	window->GetAnimator().AddAnimation(moveAni, 1, 0, 100, &b);
 	window->GetAnimator().AddAnimation(opacityIn, 0, 1, 500, &b);
+
+
 	window->Show();
 
 }
