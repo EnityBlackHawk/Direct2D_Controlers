@@ -103,7 +103,7 @@ DWORD WINAPI ShackWindow()
 		std::uniform_int_distribution<int> distributionY(originalPos.top - intensity, originalPos.top + intensity);
 
 		SetWindowPos(window->GetHwnd(), NULL, distributionX(generator), distributionY(generator), 0, 0, SWP_NOSIZE);
-		intensity = intensity < 10 ? intensity + 1 : intensity;
+		intensity = intensity < 5 ? intensity + 1 : intensity;
 		::Sleep(10);
 	}
 }
@@ -111,22 +111,30 @@ DWORD WINAPI ShackWindow()
 
 DWORD WINAPI mousePointerMove()
 {
-	::Sleep(500);
-	int targertX = (pY->GetPosX() + pY->GetWidth() / 2) + window->GetRect().left;
-	int targetY = (pY->GetPosY() + pY->GetHeight() / 2) + window->GetRect().top;
+	::Sleep(250);
 	int deltaX = 0;
 	while (true)
 	{
+		int targertX = (pY->GetPosX() + pY->GetWidth() / 2) + window->GetRect().left;
+		int targetY = (pY->GetPosY() + pY->GetHeight() / 2) + window->GetRect().top;
 
 		POINT p;
 		GetCursorPos(&p);
 		
 		if (p.x < targertX)
-			deltaX += 2;
-		else 
+		{
+			deltaX += 1;
+			SetCursorPos(p.x + deltaX, targetY);
+		}
+		else
+		{
 			deltaX = 0;
-
-		SetCursorPos(p.x + deltaX, targetY);
+			while (true)
+			{
+				SetCursorPos(targertX, targetY);
+				::Sleep(50);
+			}
+		}
 		::Sleep(15);
 	}
 }

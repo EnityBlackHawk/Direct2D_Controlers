@@ -1,6 +1,6 @@
 #pragma once
 #include "Element.h"
-#include <d2d1.h>
+#include <d2d1_3.h>
 #include <wincodec.h>
 #include "ElementStyle.h"
 
@@ -22,7 +22,7 @@ public:
 
 	virtual void OnPaint(ID2D1RenderTarget* pRenderTarget) override;
 
-	void ExOnPaint(ID2D1RenderTarget* pRenderTarger);
+	void ExOnPaint(ID2D1DeviceContext5* pRenderTarger);
 
 	void hoverCloseButton();
 	void hoverMaxButton();
@@ -41,6 +41,8 @@ public:
 
 	IWICImagingFactory* pImagingFactory;
 	ID2D1Bitmap* pBitmap;
+	ID2D1SvgDocument* pSvgMax;
+	ID2D1SvgDocument* pSvgMin;
 
 
 	ElementStyle style;
