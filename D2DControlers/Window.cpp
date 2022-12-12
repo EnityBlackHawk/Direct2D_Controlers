@@ -253,6 +253,12 @@ LRESULT Window::InternalWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM l
 
     case WM_SIZE:
     {
+
+        if (wParam == SIZE_MAXIMIZED)
+        {
+            OutputDebugString("Maximazed");
+        }
+
         RECT rc;
         GetClientRect(hwnd, &rc);
 

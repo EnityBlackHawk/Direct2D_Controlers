@@ -1,4 +1,4 @@
-#include <Windows.h>
+﻿#include <Windows.h>
 #include <random>
 #include "ElementStyle.h"
 #include "Window.h"
@@ -19,6 +19,7 @@ HANDLE mouseMoveThread = NULL;
 // Animations:
 int Index_onNoButtonsAnimation;
 int Index_onNoBackgroundAnimation;
+int Index_onYesBackgroundAnimation;
 
 
 std::default_random_engine generator;
@@ -159,6 +160,7 @@ void onYesClick(void* sender, void* args)
 		TerminateThread(shakeThread, 0);
 	if (mouseMoveThread)
 		TerminateThread(mouseMoveThread, 0);
+	window->GetAnimator().StartAnimation(Index_onYesBackgroundAnimation);
 }
 
 // Animations
@@ -174,11 +176,17 @@ void onNoBackgroundAnimation(float delta)
 	window->RequestRedraw();
 }
 
+void onYesBackgroundAnimation(float delta)
+{
+	pFrameBlack->SetOpacity(delta);
+	window->RequestRedraw();
+}
+
 BOOL WinMain(HINSTANCE hInstance, HINSTANCE hIgnore, PSTR lpCmdLine, INT nCmdShow)
 {
 	window = new Window("Teste", hInstance, WinProc, { RGB(255,255,255), RGB(0, 0, 0), RGB(0, 0, 0), RGB(0, 0, 0) });
 	
-	Image i(AUTO, AUTO, AUTO, AUTO, ALIGN_STREACH, L"E:\\Downloads\\e2272d6ba9565d84b624496d1d54b6ccf2b8d4df.jpg");
+	Image i(0, 0, 550, AUTO, ALIGN_CENTER, L"E:\\cpp\\D2DControlers\\D2DControlers\\img\\bg1.jpg");
 
 
 	ElementStyle styleFrame(LINEAR_GRADIENT, { 0x451057, 0xa36110 }, 0, 0, 0);
@@ -191,7 +199,7 @@ BOOL WinMain(HINSTANCE hInstance, HINSTANCE hIgnore, PSTR lpCmdLine, INT nCmdSho
 
 
 	ElementStyle s2(SOLID_COLOR, {D2D1::ColorF(0xFFFFFF, 0.75f)}, NULL, 10, NULL, 0 );
-	Button b(AUTO, AUTO, AUTO, 50, ALIGN_CENTER, L"N�o", s2);
+	Button b(AUTO, AUTO, AUTO, 50, ALIGN_CENTER, L"Não", s2);
 	b.margin = { 0, 0, b.GetWidth() / 2 + 5, 0 };
 
 	b.AddEvent(ON_MOUSE_HOVER, noOnHover_once);
@@ -222,6 +230,7 @@ BOOL WinMain(HINSTANCE hInstance, HINSTANCE hIgnore, PSTR lpCmdLine, INT nCmdSho
 	auto& animator = window->GetAnimator();
 	Index_onNoButtonsAnimation = animator.AddAnimation(onNoButtonsAnimation, 0, 20, 500, &b);
 	Index_onNoBackgroundAnimation = animator.AddAnimation(onNoBackgroundAnimation, 1, 0, 1000, &f);
+	Index_onYesBackgroundAnimation = animator.AddAnimation(onYesBackgroundAnimation, 1, 0, 1000, nullptr);
 
 	window->Show();
 

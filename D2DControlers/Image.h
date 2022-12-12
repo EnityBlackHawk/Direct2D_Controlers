@@ -26,6 +26,8 @@ private:
 	void CreateResources(ID2D1RenderTarget* pRenderTaget);
 	float opacity = 1;
 	const WCHAR* imagePath;
+	float imageAspectRatio = 0;
+
 
 	IWICImagingFactory2* pImagingFactory;
 	ID2D1Bitmap* pBitmap;

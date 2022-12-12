@@ -3,6 +3,7 @@
 #include <d2d1_3.h>
 #include <wincodec.h>
 #include "ElementStyle.h"
+#include "Label.h"
 
 #pragma comment(lib, "windowscodecs.lib")
 
@@ -32,6 +33,7 @@ public:
 	void CreateResources(ID2D1RenderTarget* pRenderTarger);
 
 	D2D1_ROUNDED_RECT roundRect;
+	Label text;
 
 	ID2D1SolidColorBrush* closeButtonBrush;
 	ID2D1SolidColorBrush* maxButtonBrush;

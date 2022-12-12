@@ -2,13 +2,15 @@
 
 
 TitleBar::TitleBar(int x, int y, int width, int height, unsigned char align, ElementStyle style):
-    Element(x, y, width, height, align), style(style)
+    Element(x, y, width, height, align), style(style), 
+    text(5, 2, AUTO, AUTO, ALIGN_NONE, L"Title", 20, ElementStyle(0x0, 0x000000, 0, 0, 0))
 {
 }
 
 void TitleBar::Create(HINSTANCE hInstance, HWND hParent, ID2D1RenderTarget * pRenderTarget)
 {
     CreateResources(pRenderTarget);
+    text.Create(NULL, NULL, pRenderTarget);
 }
 
 void TitleBar::SetOpacity(float opacity)
@@ -45,12 +47,14 @@ void TitleBar::ExOnPaint(ID2D1DeviceContext5* pRenderTarger)
 
     D2D1_MATRIX_3X2_F transform;
 
-    transform = D2D1::Matrix3x2F::Translation(width - (101 - 7.5f), 0);
+    transform = D2D1::Matrix3x2F::Translation(width - (101 - 12.5f), 5);
     pRenderTarger->SetTransform(transform);
     pRenderTarger->DrawSvgDocument(pSvgMax);
-    pRenderTarger->SetTransform(D2D1::Matrix3x2F::Translation(width - (148 - 7.5f), 0));
+    pRenderTarger->SetTransform(D2D1::Matrix3x2F::Translation(width - (148 - 12.5f), 5));
     pRenderTarger->DrawSvgDocument(pSvgMin);
     pRenderTarger->SetTransform(D2D1::Matrix3x2F::Translation(0,0));
+
+    text.OnPaint(pRenderTarger);
 }
 
 void TitleBar::hoverCloseButton()
@@ -119,12 +123,12 @@ void TitleBar::CreateResources(ID2D1RenderTarget* pRenderTarger)
 
     hr = pImagingFactory->CreateStream(&pStream);
     hr = pStream->InitializeFromFilename(L"browsers-outline.svg", GENERIC_READ);
-    hr = reinterpret_cast<ID2D1DeviceContext5*>(pRenderTarger)->CreateSvgDocument(pStream, D2D1::SizeF(30, 30), &pSvgMax);
+    hr = reinterpret_cast<ID2D1DeviceContext5*>(pRenderTarger)->CreateSvgDocument(pStream, D2D1::SizeF(20, 20), &pSvgMax);
 
     pStream->Release();
     hr = pImagingFactory->CreateStream(&pStream);
     hr = pStream->InitializeFromFilename(L"remove-outline.svg", GENERIC_READ);
-    reinterpret_cast<ID2D1DeviceContext5*>(pRenderTarger)->CreateSvgDocument(pStream, D2D1::SizeF(30, 30), &pSvgMin);
+    reinterpret_cast<ID2D1DeviceContext5*>(pRenderTarger)->CreateSvgDocument(pStream, D2D1::SizeF(20, 20), &pSvgMin);
 
 
     if (style.getTypeOfBrush() == SOLID_COLOR)
