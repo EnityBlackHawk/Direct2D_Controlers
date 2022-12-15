@@ -1,6 +1,7 @@
 #pragma once
 #include "Element.h"
 #include "ElementStyle.h"
+#include "TextStyle.h"
 #include <dwrite.h>
 
 #pragma comment(lib, "Dwrite.lib")
@@ -10,9 +11,9 @@ class Label : public Element
 public:
 	Label(int x, int y, int width, int height, unsigned char align, const WCHAR text[], float fontSize, ElementStyle style);
 
+	Label(int x, int y, int width, int height, unsigned char align, const WCHAR text[], ElementStyle style, TextStyle textStyle);
+
 	void SetText(const WCHAR text[]);
-
-
 
 	// Inherited via Element
 	virtual void Create(HINSTANCE hInstance, HWND hParent, ID2D1RenderTarget* pRenderTarget) override;
@@ -32,6 +33,8 @@ private:
 	void CreateResources(ID2D1RenderTarget* pRenderTarget);
 
 	ElementStyle style;
+	TextStyle textStyle;
+
 	ID2D1SolidColorBrush* pSolidColorBrush;
 	IDWriteFactory* pWriteFactory;
 	IDWriteTextFormat* pWriteFormat;

@@ -1,7 +1,13 @@
 #include "Label.h"
+#include "Exception.h"
 
 Label::Label(int x, int y, int width, int height, unsigned char align, const WCHAR text[], float fontSize, ElementStyle style):
-    Element(x, y, width, height, align), text(text), fontSize(fontSize), style(style)
+    Element(x, y, width, height, align), text(text), fontSize(fontSize), style(style), textStyle()
+{
+}
+
+Label::Label(int x, int y, int width, int height, unsigned char align, const WCHAR text[], ElementStyle style, TextStyle textStyle):
+    Element(x, y, width, height, align), text(text), style(style), textStyle(textStyle), fontSize(textStyle.GetFontSize())
 {
 }
 
@@ -53,8 +59,9 @@ void Label::CreateResources(ID2D1RenderTarget* pRenderTarget)
 
     hr = DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(pWriteFactory), (IUnknown**)&pWriteFactory);
 
-    hr = pWriteFactory->CreateTextFormat(fontName, NULL, DWRITE_FONT_WEIGHT_NORMAL,
-        DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL, fontSize, L"", &pWriteFormat);
+    hr = pWriteFactory->CreateTextFormat(textStyle.GetFontFamily(), NULL, DWRITE_FONT_WEIGHT(textStyle.GetFontWeight()),
+        DWRITE_FONT_STYLE(textStyle.GetFontStyle()), DWRITE_FONT_STRETCH_NORMAL, fontSize, L"", &pWriteFormat);
+
 
     if (height == AUTO || width == AUTO)
     {

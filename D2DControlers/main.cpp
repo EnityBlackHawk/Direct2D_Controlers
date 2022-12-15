@@ -14,6 +14,7 @@ Frame* rf;
 Frame* pFrameBlack;
 Button* pB;
 Button* pY;
+Label* pLabel;
 constexpr int hearthsCount = 50;
 std::vector<Image> hearths = std::vector<Image>();
 
@@ -186,6 +187,8 @@ void WINAPI imageTeste(Image* imageC)
 void noOnHover_once(void* sender, void* args)
 {
 	pB->RemoveEvent(ON_MOUSE_HOVER);
+	pLabel->SetText(L"Teste");
+
 	window->GetAnimator().StartAnimation(Index_onNoButtonsAnimation);
 	window->GetAnimator().StartAnimation(Index_onNoBackgroundAnimation);
 
@@ -284,8 +287,9 @@ BOOL WinMain(HINSTANCE hInstance, HINSTANCE hIgnore, PSTR lpCmdLine, INT nCmdSho
 	b2.AddEvent(ON_CLICK, onYesClick);
 	pY = &b2;
 
-	Label l(0, 0, AUTO, AUTO, ALIGN_CENTER, L"Label", 30, ElementStyle(0, 0xFFFFFF, 0, 0, 0));
+	Label l(0, 0, AUTO, AUTO, ALIGN_CENTER, L"Label", ElementStyle(0, 0xFFFFFF, 0, 0, 0), TextStyle(40, L"Segoe UI", SEMI_BOLD, NORMAL));
 	l.margin = { 0, 0, 0, b2.GetHeight() + 10 };
+	pLabel = &l;
 
 	window->AddElement(i);
 	window->AddElement(frameBlack);
