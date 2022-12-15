@@ -370,6 +370,16 @@ void Window::AddElement(Element& rElement, bool enableMouseEvents)
         mouseTracker.AddElement(&rElement);
 }
 
+void Window::RemoveElement(const Element& rElement)
+{
+    std::remove(elements.begin(), elements.end(), &rElement);
+}
+
+void Window::RemoveElement(Element* pElement)
+{
+    std::remove(elements.begin(), elements.end(), pElement);
+}
+
 int Window::GetActualWidth() const
 {
     RECT rect;

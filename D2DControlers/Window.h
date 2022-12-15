@@ -35,6 +35,8 @@ public:
 	void Redraw();
 	void Show();
 	void AddElement(Element& rElement, bool enableMouseEvents = false);
+	void RemoveElement(const Element& rElement);
+	void RemoveElement(Element* pElement);
 	int GetActualWidth() const;
 	int GetActualHeight() const;
 	Element* operator[](int index);

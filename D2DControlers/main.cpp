@@ -200,7 +200,10 @@ void onYesClick(void* sender, void* args)
 	const int y = pY->GetPosY() + pY->GetHeight() / 2;
 
 	for (int i = 0; i < hearthsCount; i++)
+	{
 		hearths[i].SetPos(x, y);
+		hearths[i].SetOpacity(1);
+	}
 
 
 
@@ -227,12 +230,20 @@ void onNoBackgroundAnimation(float delta)
 	window->RequestRedraw();
 }
 
-
+void RemoveButtons()
+{
+	window->RemoveElement(pB);
+	window->RemoveElement(pY);
+}
 
 void onYesBackgroundAnimation(float delta)
 {
-	pFrameBlack->SetOpacity(delta);
+	pFrameBlack->SetOpacity(delta >= 0.3 ? delta : 0.3);
+	pY->SetOpacity(delta);
+	pB->SetOpacity(delta);
 	window->RequestRedraw();
+	if (delta <= 0)
+		RemoveButtons();
 }
 
 BOOL WinMain(HINSTANCE hInstance, HINSTANCE hIgnore, PSTR lpCmdLine, INT nCmdShow)
@@ -240,18 +251,16 @@ BOOL WinMain(HINSTANCE hInstance, HINSTANCE hIgnore, PSTR lpCmdLine, INT nCmdSho
 	window = new Window("Teste", hInstance, WinProc, { RGB(0,0,0), RGB(0, 0, 0), RGB(0, 0, 0), RGB(0, 0, 0) });
 	
 	
-	Image i(AUTO, AUTO, 500, AUTO, ALIGN_CENTER, L"E:\\cpp\\D2DControlers\\D2DControlers\\img\\bg1.jpg");
+	Image i(AUTO, AUTO, AUTO, AUTO, ALIGN_STREACH, L"E:\\cpp\\D2DControlers\\D2DControlers\\img\\bg.png");
 	for (int i = 0; i < hearthsCount; i++)
 	{
-		hearths.push_back(Image(500, 500, 60, AUTO, ALIGN_NONE, L"E:\\cpp\\D2DControlers\\D2DControlers\\img\\cora.png"));
+		auto o = Image(500, 500, 60, AUTO, ALIGN_NONE, L"E:\\cpp\\D2DControlers\\D2DControlers\\img\\cora.png");
+		o.SetOpacity(0);
+		hearths.push_back(o);
 	}
 	//Image iC(50, 50, 60, AUTO, ALIGN_NONE, L"E:\\cpp\\D2DControlers\\D2DControlers\\img\\cora.png");
 	
 
-	Grid g(AUTO, AUTO, AUTO, AUTO, ALIGN_STREACH);
-	g.DefineColumn(500, 500);
-	g.DefineRow(100, 100);
-	g.AddElement(0, 0, i);
 	
 	ElementStyle styleFrame(LINEAR_GRADIENT, { 0x451057, 0xa36110 }, 0, 0, 0);
 	
@@ -270,8 +279,6 @@ BOOL WinMain(HINSTANCE hInstance, HINSTANCE hIgnore, PSTR lpCmdLine, INT nCmdSho
 
 	pB = &b;
 
-	
-
 	Button b2(AUTO, AUTO, AUTO, 50, ALIGN_CENTER, L"Sim", s2);
 	b2.margin = { b.GetWidth() / 2 + 5, 0, 0, 0 };
 	b2.AddEvent(ON_CLICK, onYesClick);
@@ -280,19 +287,15 @@ BOOL WinMain(HINSTANCE hInstance, HINSTANCE hIgnore, PSTR lpCmdLine, INT nCmdSho
 	Label l(0, 0, AUTO, AUTO, ALIGN_CENTER, L"Label", 30, ElementStyle(0, 0xFFFFFF, 0, 0, 0));
 	l.margin = { 0, 0, 0, b2.GetHeight() + 10 };
 
-	window->AddElement(g);
+	window->AddElement(i);
+	window->AddElement(frameBlack);
 	for (int i = 0; i < hearthsCount; i++)
 		window->AddElement(hearths[i]);
-	window->AddElement(frameBlack);
 	window->AddElement(f);
 	window->AddElement(l);
 	window->AddElement(b2, true);
 	window->AddElement(b, true);
 
-
-	/*window->GetAnimator().AddAnimation(moveAni, 1, 0, 250, &b);
-	window->GetAnimator().AddAnimation(opacityIn, 0, 1, 500, &b);
-	window->GetAnimator().AddAnimation(frameOut, 1, 0, 500, &f);*/
 
 	auto& animator = window->GetAnimator();
 	Index_onNoButtonsAnimation = animator.AddAnimation(onNoButtonsAnimation, 0, 20, 500, &b);
