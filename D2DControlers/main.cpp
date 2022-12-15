@@ -1,17 +1,21 @@
 ﻿#include <Windows.h>
 #include <random>
+#include <vector>
 #include "ElementStyle.h"
 #include "Window.h"
 #include "Frame.h"
 #include "Button.h"
 #include "Label.h"
 #include "Image.h"
+#include "Grid.h"
 
 Window* window;
 Frame* rf;
 Frame* pFrameBlack;
 Button* pB;
 Button* pY;
+constexpr int hearthsCount = 50;
+std::vector<Image> hearths = std::vector<Image>();
 
 HANDLE shakeThread = NULL;
 HANDLE mouseMoveThread = NULL;
@@ -140,7 +144,43 @@ DWORD WINAPI mousePointerMove()
 	}
 }
 
+void WINAPI imageTeste(Image* imageC)
+{
 
+	std::uniform_int_distribution<int> distX(-3, 3);
+	std::uniform_int_distribution<int> distY(-3, 3);
+	float direcX = distX(generator);
+	float direcY = distY(generator);
+	const float targetRight = window->GetActualWidth() - (imageC->GetWidth());
+	const float targetBottom = window->GetActualHeight() - (imageC->GetHeight());
+	while (true)
+	{
+		imageC->Translate(direcX, direcY);
+		window->RequestRedraw();
+
+		if (imageC->GetPosX() >= targetRight)
+		{
+			direcX = -abs(distX(generator));
+			direcY = distY(generator);
+		}
+		else if (imageC->GetPosY() >= targetBottom)
+		{
+			direcX = distX(generator);
+			direcY = -abs(distY(generator));
+		}
+		else if (imageC->GetPosX() <= 0)
+		{
+			direcX = abs(distX(generator));
+			direcY = distY(generator);
+		}
+		else if (imageC->GetPosY() <= 0)
+		{
+			direcX = distX(generator);
+			direcY = abs(distY(generator));
+		}
+		::Sleep(2.5);
+	}
+}
 
 // EVENTS
 void noOnHover_once(void* sender, void* args)
@@ -156,11 +196,22 @@ void noOnHover_once(void* sender, void* args)
 
 void onYesClick(void* sender, void* args)
 {
+	const int x = pY->GetPosX() + pY->GetWidth() / 2;
+	const int y = pY->GetPosY() + pY->GetHeight() / 2;
+
+	for (int i = 0; i < hearthsCount; i++)
+		hearths[i].SetPos(x, y);
+
+
+
 	if (shakeThread)
 		TerminateThread(shakeThread, 0);
 	if (mouseMoveThread)
 		TerminateThread(mouseMoveThread, 0);
 	window->GetAnimator().StartAnimation(Index_onYesBackgroundAnimation);
+	
+	for(int i = 0; i < hearthsCount; i++)
+		CreateThread(nullptr, NULL, (LPTHREAD_START_ROUTINE)imageTeste, &hearths[i], NULL, nullptr);
 }
 
 // Animations
@@ -176,6 +227,8 @@ void onNoBackgroundAnimation(float delta)
 	window->RequestRedraw();
 }
 
+
+
 void onYesBackgroundAnimation(float delta)
 {
 	pFrameBlack->SetOpacity(delta);
@@ -184,11 +237,22 @@ void onYesBackgroundAnimation(float delta)
 
 BOOL WinMain(HINSTANCE hInstance, HINSTANCE hIgnore, PSTR lpCmdLine, INT nCmdShow)
 {
-	window = new Window("Teste", hInstance, WinProc, { RGB(255,255,255), RGB(0, 0, 0), RGB(0, 0, 0), RGB(0, 0, 0) });
+	window = new Window("Teste", hInstance, WinProc, { RGB(0,0,0), RGB(0, 0, 0), RGB(0, 0, 0), RGB(0, 0, 0) });
 	
-	Image i(0, 0, 550, AUTO, ALIGN_CENTER, L"E:\\cpp\\D2DControlers\\D2DControlers\\img\\bg1.jpg");
+	
+	Image i(AUTO, AUTO, 500, AUTO, ALIGN_CENTER, L"E:\\cpp\\D2DControlers\\D2DControlers\\img\\bg1.jpg");
+	for (int i = 0; i < hearthsCount; i++)
+	{
+		hearths.push_back(Image(500, 500, 60, AUTO, ALIGN_NONE, L"E:\\cpp\\D2DControlers\\D2DControlers\\img\\cora.png"));
+	}
+	//Image iC(50, 50, 60, AUTO, ALIGN_NONE, L"E:\\cpp\\D2DControlers\\D2DControlers\\img\\cora.png");
+	
 
-
+	Grid g(AUTO, AUTO, AUTO, AUTO, ALIGN_STREACH);
+	g.DefineColumn(500, 500);
+	g.DefineRow(100, 100);
+	g.AddElement(0, 0, i);
+	
 	ElementStyle styleFrame(LINEAR_GRADIENT, { 0x451057, 0xa36110 }, 0, 0, 0);
 	
 	Frame f(20, 20, 100, 100, ALIGN_STREACH, styleFrame);
@@ -216,12 +280,15 @@ BOOL WinMain(HINSTANCE hInstance, HINSTANCE hIgnore, PSTR lpCmdLine, INT nCmdSho
 	Label l(0, 0, AUTO, AUTO, ALIGN_CENTER, L"Label", 30, ElementStyle(0, 0xFFFFFF, 0, 0, 0));
 	l.margin = { 0, 0, 0, b2.GetHeight() + 10 };
 
-	window->AddElement(i);
+	window->AddElement(g);
+	for (int i = 0; i < hearthsCount; i++)
+		window->AddElement(hearths[i]);
 	window->AddElement(frameBlack);
 	window->AddElement(f);
 	window->AddElement(l);
 	window->AddElement(b2, true);
 	window->AddElement(b, true);
+
 
 	/*window->GetAnimator().AddAnimation(moveAni, 1, 0, 250, &b);
 	window->GetAnimator().AddAnimation(opacityIn, 0, 1, 500, &b);

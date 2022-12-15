@@ -40,6 +40,7 @@ struct Geometry
 
 class Element
 {
+
 public:
 
 	Element(int x, int y, int width, int height, unsigned char align):
@@ -54,6 +55,8 @@ public:
 		Geometry g = {posX, posY, width, height};
 		return g;
 	}
+
+	
 
 	void AddEvent(int eventId, EVENT action)
 	{
@@ -121,6 +124,34 @@ public:
 	
 	virtual void Move(int x, int y) = 0;
 
+	void SetPos(int x, int y)
+	{
+		posX = x;
+		posY = y;
+	}
+
+	virtual void Translate(float x, float y)
+	{
+		
+		translate = D2D1::Matrix3x2F::Translation(x / 2, y / 2);
+		posX += x * 2;
+		posY += y;
+	}
+
+	virtual void Rotate(float angle)
+	{
+		transform = transform * D2D1::Matrix3x2F::Rotation(angle, D2D1::Point2F(width / 2, height / 2));
+	}
+
+	virtual void Scale(float x, float y)
+	{
+		transform = transform * D2D1::Matrix3x2F::Scale(x, y, D2D1::Point2F(width / 2, height / 2));
+	}
+
+	void ResetTransform()
+	{
+		transform = D2D1::Matrix3x2F::Identity();
+	}
 
 	virtual HWND Show(HWND hParent, HINSTANCE hInstance) = 0;
 
@@ -214,5 +245,7 @@ protected:
 	HWND hParent;
 	unsigned char align;
 	std::unordered_map<int, EVENT> events;
+	D2D1::Matrix3x2F transform = D2D1::Matrix3x2F::Identity();
+	D2D1::Matrix3x2F translate = D2D1::Matrix3x2F::Identity();
 };
 

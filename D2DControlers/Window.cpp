@@ -411,6 +411,11 @@ const RECT& Window::GetRect() const
     return r;
 }
 
+const ID2D1DeviceContext5* Window::GetDeviceContext() const
+{
+    return pContext;
+}
+
 void Window::RequestRedraw()
 {
     isRedrawRequested = true;
@@ -550,7 +555,7 @@ void Window::CreateBuffers()
             &pBitmap
         );
 
+        
         pContext->SetTarget(pBitmap);
-    
-   
+        
 }

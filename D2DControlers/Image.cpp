@@ -1,4 +1,5 @@
 #include "Image.h"
+#include "Exception.h"
 
 Image::Image(int x, int y, int width, int height, unsigned char align, const WCHAR* filePath):
     Element(x, y, width, height, align), imagePath(filePath)
@@ -27,10 +28,11 @@ HWND Image::Show(HWND hParent, HINSTANCE hInstance)
 void Image::OnPaint(ID2D1RenderTarget* pRenderTarget)
 {
 
-
+    pRenderTarget->SetTransform(transform * translate);
     pRenderTarget->DrawBitmap(pBitmap, D2D1::RectF(posX, posY, width + posX, (width * imageAspectRatio) + posY), opacity, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
         D2D1::RectF(0, 0, pBitmap->GetSize().width, pBitmap->GetSize().height)
     );
+    pRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
 
 }
 
@@ -50,13 +52,18 @@ void Image::CreateResources(ID2D1RenderTarget* pRenderTaget)
     IWICStream* pStrem = nullptr;
     IWICFormatConverter* pConverter = nullptr;
 
-    pImagingFactory->CreateDecoderFromFilename(
+    hr = pImagingFactory->CreateDecoderFromFilename(
         imagePath,
         NULL,
         GENERIC_READ,
         WICDecodeMetadataCacheOnLoad,
         &pDecoder
     );
+
+    if (hr)
+        ERROR_MESSAGE_LAST_ERROR();
+
+
     pDecoder->GetFrame(0, &pSource);
     pImagingFactory->CreateFormatConverter(&pConverter);
 

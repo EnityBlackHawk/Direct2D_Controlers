@@ -136,6 +136,7 @@
     <ClInclude Include="ElementStyle.h" />
     <ClInclude Include="Exception.h" />
     <ClInclude Include="Frame.h" />
+    <ClInclude Include="Grid.h" />
     <ClInclude Include="IInteractable.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="IParentable.h" />
@@ -149,6 +150,7 @@
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="ElementStyle.cpp" />
     <ClCompile Include="Frame.cpp" />
+    <ClCompile Include="Grid.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="Label.cpp" />
     <ClCompile Include="main.cpp" />

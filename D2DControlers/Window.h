@@ -42,7 +42,7 @@ public:
 	Animator& GetAnimator();
 	MouseTracker& GetMouseTracker();
 	const RECT& GetRect() const;
-	
+	const ID2D1DeviceContext5* GetDeviceContext() const;
 
 	void RequestRedraw();
 	void ClearRedrawRequest();
@@ -52,6 +52,7 @@ public:
 	void ChangeCursor(LPCSTR cursor) const;
 
 	static DWORD WINAPI DrawThread(Window* pWindow);
+
 
 private:
 
