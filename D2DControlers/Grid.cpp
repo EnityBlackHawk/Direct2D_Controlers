@@ -33,6 +33,11 @@ void Grid::SetOpacity(float opacity)
 {
 }
 
+float Grid::GetOpacity()
+{
+    return 0.0f;
+}
+
 void Grid::Move(int x, int y)
 {
 }

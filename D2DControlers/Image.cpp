@@ -16,6 +16,11 @@ void Image::SetOpacity(float opacity)
     Image::opacity = opacity;
 }
 
+float Image::GetOpacity()
+{
+    return opacity;
+}
+
 void Image::Move(int x, int y)
 {
 }

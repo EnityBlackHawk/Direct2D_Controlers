@@ -14,6 +14,7 @@ public:
 	// Inherited via Element
 	virtual void Create(HINSTANCE hInstance, HWND hParent, ID2D1RenderTarget* pRenderTarget) override;
 	virtual void SetOpacity(float opacity) override;
+	virtual float GetOpacity() override;
 	virtual void Move(int x, int y) override;
 	virtual HWND Show(HWND hParent, HINSTANCE hInstance) override;
 	virtual void OnPaint(ID2D1RenderTarget* pRenderTarget) override;

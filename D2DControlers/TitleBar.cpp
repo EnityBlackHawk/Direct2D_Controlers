@@ -17,6 +17,11 @@ void TitleBar::SetOpacity(float opacity)
 {
 }
 
+float TitleBar::GetOpacity()
+{
+    return 0.0f;
+}
+
 void TitleBar::Move(int x, int y)
 {
     roundRect = D2D1::RoundedRect(D2D1::RectF(posX, posY, posX + width, posY + height), 0, 0);

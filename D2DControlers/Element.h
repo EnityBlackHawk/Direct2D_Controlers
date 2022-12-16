@@ -120,6 +120,7 @@ public:
 	}
 
 	virtual void SetOpacity(float opacity) = 0;
+	virtual float GetOpacity() = 0;
 
 	
 	virtual void Move(int x, int y) = 0;

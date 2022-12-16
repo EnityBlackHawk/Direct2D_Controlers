@@ -42,6 +42,14 @@ void Frame::SetOpacity(float opacity)
         pLinearGradientBrush->SetOpacity(opacity);
 }
 
+float Frame::GetOpacity()
+{
+    if (pLinearGradientBrush)
+        return pLinearGradientBrush->GetOpacity();
+    if (pSolidColorBrush)
+        return pSolidColorBrush->GetOpacity();
+}
+
 void Frame::OnPaint(ID2D1RenderTarget* pRenderTarget)
 {
 

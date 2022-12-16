@@ -58,6 +58,12 @@ void Button::SetOpacity(float opacity)
     pForegroundBrush->SetOpacity(opacity);
 }
 
+float Button::GetOpacity()
+{
+    if (pForegroundBrush)
+        return pForegroundBrush->GetOpacity();
+}
+
 void Button::SetColorSolidColor(D2D1::ColorF color)
 {
     if (pSolidColorBrush)

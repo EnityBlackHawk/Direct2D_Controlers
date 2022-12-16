@@ -21,6 +21,8 @@ public:
 
 	virtual void SetOpacity(float opacity) override;
 
+	virtual float GetOpacity() override;
+
 	virtual void Move(int x, int y) override;
 
 	virtual HWND Show(HWND hParent, HINSTANCE hInstance) override;

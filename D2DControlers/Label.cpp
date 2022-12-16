@@ -32,6 +32,11 @@ void Label::SetOpacity(float opacity)
     pSolidColorBrush->SetOpacity(opacity);
 }
 
+float Label::GetOpacity()
+{
+    return pSolidColorBrush ? pSolidColorBrush->GetOpacity() : -1;
+}
+
 void Label::Move(int x, int y)
 {
     posX = x;
