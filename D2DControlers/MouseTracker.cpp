@@ -6,6 +6,11 @@ void MouseTracker::AddElement(Element* e)
 	elements.push_back(e);
 }
 
+void MouseTracker::RemoveElement(const Element* e)
+{
+	std::remove(elements.begin(), elements.end(), e);
+}
+
 bool MouseTracker::IsInBound(Geometry g)
 {
 	if (mouseX > g.posX && mouseX < g.posX + g.width && mouseY > g.posY && mouseY < g.posY + g.heght)
@@ -62,4 +67,9 @@ void MouseTracker::SetMousePosition(int x, int y)
 {
 	mouseX = x;
 	mouseY = y;
+}
+
+void MouseTracker::ClearElementHover()
+{
+	elementOnHover = nullptr;
 }

@@ -37,12 +37,16 @@ static int getTextSize(const WCHAR* text)
 
 void Button::OnPaint(ID2D1RenderTarget* pRenderTarget)
 {
+    pRenderTarget->SetTransform(translate * transform);
+
     if(style.getTypeOfBrush() == SOLID_COLOR)
         pRenderTarget->FillRoundedRectangle(roundRect, pSolidColorBrush);
     else
         pRenderTarget->FillRoundedRectangle(roundRect, pLinearGradientBrush);
     pRenderTarget->DrawTextA(text, getTextSize(text), pWriteFormat, D2D1::Rect(posX, posY, width + posX, height + posY),
        pForegroundBrush);
+
+    pRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
 }
 
 void Button::SetOpacity(float opacity)

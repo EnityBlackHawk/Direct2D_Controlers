@@ -148,6 +148,11 @@ public:
 		transform = transform * D2D1::Matrix3x2F::Scale(x, y, D2D1::Point2F(width / 2, height / 2));
 	}
 
+	virtual void Skew(float angleX, float angleY)
+	{
+		transform = transform * D2D1::Matrix3x2F::Skew(angleX, angleY, D2D1::Point2F(width / 2, height / 2));
+	}
+
 	void ResetTransform()
 	{
 		transform = D2D1::Matrix3x2F::Identity();
