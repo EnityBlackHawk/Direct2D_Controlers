@@ -16,6 +16,12 @@ void Label::SetText(const WCHAR text[])
     Label::text = text;
 }
 
+void Label::SetColor(D2D1::ColorF color)
+{
+    if (pSolidColorBrush)
+        pSolidColorBrush->SetColor(color);
+}
+
 void Label::Create(HINSTANCE hInstance, HWND hParent, ID2D1RenderTarget * pRenderTarget)
 {
     CreateResources(pRenderTarget);
@@ -39,8 +45,9 @@ HWND Label::Show(HWND hParent, HINSTANCE hInstance)
 
 void Label::OnPaint(ID2D1RenderTarget* pRenderTarget)
 {
-    pRenderTarget->DrawTextA(text, getTextSize(text), pWriteFormat, D2D1::Rect(posX, posY, width + posX, height + posY),
+    pRenderTarget->DrawTextA(text, getTextSize(text), pWriteFormat, D2D1::RectF(posX, posY, width + posX, height + posY),
         pSolidColorBrush);
+
 }
 
 int Label::getTextSize(const WCHAR* text)

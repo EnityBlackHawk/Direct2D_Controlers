@@ -1,6 +1,7 @@
 #pragma once
 #include "Element.h"
 #include "ElementStyle.h"
+#include <d2d1effects.h>
 #include <dwrite.h>
 
 #pragma comment(lib, "Dwrite.lib")

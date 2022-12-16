@@ -17,10 +17,10 @@ void Button::Move(int x, int y)
     posY = y;
     if (pLinearGradientBrush)
     {
-        pLinearGradientBrush->SetStartPoint(D2D1::Point2(posX, posY));
-        pLinearGradientBrush->SetEndPoint(D2D1::Point2(posX + width, posY + height));
+        pLinearGradientBrush->SetStartPoint(D2D1::Point2F(posX, posY));
+        pLinearGradientBrush->SetEndPoint(D2D1::Point2F(posX + width, posY + height));
     }
-    roundRect = D2D1::RoundedRect(D2D1::Rect(posX, posY, posX + width, posY + height), style.getCornerRadius(), style.getCornerRadius());
+    roundRect = D2D1::RoundedRect(D2D1::RectF(posX, posY, posX + width, posY + height), style.getCornerRadius(), style.getCornerRadius());
 }
 
 HWND Button::Show(HWND hParent, HINSTANCE hInstance)
@@ -43,7 +43,7 @@ void Button::OnPaint(ID2D1RenderTarget* pRenderTarget)
         pRenderTarget->FillRoundedRectangle(roundRect, pSolidColorBrush);
     else
         pRenderTarget->FillRoundedRectangle(roundRect, pLinearGradientBrush);
-    pRenderTarget->DrawTextA(text, getTextSize(text), pWriteFormat, D2D1::Rect(posX, posY, width + posX, height + posY),
+    pRenderTarget->DrawTextA(text, getTextSize(text), pWriteFormat, D2D1::RectF(posX, posY, width + posX, height + posY),
        pForegroundBrush);
 
     pRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
@@ -103,8 +103,8 @@ void Button::CreateResources(ID2D1RenderTarget* pRenderTarget)
 
             HRESULT hr = pRenderTarget->CreateLinearGradientBrush(
                 D2D1::LinearGradientBrushProperties(
-                    D2D1::Point2(posX, posY),
-                    D2D1::Point2(posX + width, posY + height)
+                    D2D1::Point2F(posX, posY),
+                    D2D1::Point2F(posX + width, posY + height)
                 ),
                 pGradientStops,
                 &pLinearGradientBrush
@@ -116,7 +116,7 @@ void Button::CreateResources(ID2D1RenderTarget* pRenderTarget)
             }
         }
     }
-    roundRect = D2D1::RoundedRect(D2D1::Rect(posX, posY, posX + width, posY + height), style.getCornerRadius(), style.getCornerRadius());
+    roundRect = D2D1::RoundedRect(D2D1::RectF(posX, posY, posX + width, posY + height), style.getCornerRadius(), style.getCornerRadius());
 
     pRenderTarget->CreateSolidColorBrush(style.getForegroundColor(), &pForegroundBrush);
 

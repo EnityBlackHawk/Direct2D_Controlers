@@ -1,7 +1,7 @@
 #pragma once
 #include <Windows.h>
 #include <unordered_map>
-#include <d2d1.h>
+#include <d2d1_3.h>
 
 #pragma comment(lib, "d2d1")
 

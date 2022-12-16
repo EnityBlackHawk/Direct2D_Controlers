@@ -72,8 +72,8 @@ void Frame::CreateResources(ID2D1RenderTarget* pRenderTarget)
             
             HRESULT hr = pRenderTarget->CreateLinearGradientBrush(
                 D2D1::LinearGradientBrushProperties(
-                    D2D1::Point2(posX, posY),
-                    D2D1::Point2(posX + width, posY + height)
+                    D2D1::Point2F(posX, posY),
+                    D2D1::Point2F(posX + width, posY + height)
                 ),
                 pGradientStops,
                 &pLinearGradientBrush
@@ -85,7 +85,7 @@ void Frame::CreateResources(ID2D1RenderTarget* pRenderTarget)
             }
         }
     }
-    roundRect = D2D1::RoundedRect(D2D1::Rect(posX, posY, posX + width, posY + height), style.getCornerRadius(), style.getCornerRadius());
+    roundRect = D2D1::RoundedRect(D2D1::RectF(posX, posY, posX + width, posY + height), style.getCornerRadius(), style.getCornerRadius());
 }
 
 void Frame::Move(int x, int y)
@@ -94,11 +94,11 @@ void Frame::Move(int x, int y)
     posY = y;
     if (pLinearGradientBrush)
     {
-        pLinearGradientBrush->SetStartPoint(D2D1::Point2(posX, posY));
-        pLinearGradientBrush->SetEndPoint(D2D1::Point2(posX + width, posY + height));
+        pLinearGradientBrush->SetStartPoint(D2D1::Point2F(posX, posY));
+        pLinearGradientBrush->SetEndPoint(D2D1::Point2F(posX + width, posY + height));
     }
 
-    roundRect = D2D1::RoundedRect(D2D1::Rect(posX, posY, posX + width, posY + height), style.getCornerRadius(), style.getCornerRadius());
+    roundRect = D2D1::RoundedRect(D2D1::RectF(posX, posY, posX + width, posY + height), style.getCornerRadius(), style.getCornerRadius());
 }
 
 void Frame::SetColor(D2D1::ColorF color)

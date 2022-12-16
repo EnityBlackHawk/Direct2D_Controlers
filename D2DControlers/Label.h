@@ -14,6 +14,7 @@ public:
 	Label(int x, int y, int width, int height, unsigned char align, const WCHAR text[], ElementStyle style, TextStyle textStyle);
 
 	void SetText(const WCHAR text[]);
+	void SetColor(D2D1::ColorF color);
 
 	// Inherited via Element
 	virtual void Create(HINSTANCE hInstance, HWND hParent, ID2D1RenderTarget* pRenderTarget) override;
