@@ -131,9 +131,6 @@ LRESULT Window::InternalWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM l
     
     if (bResult)
     {
-        std::ostringstream os;
-        os << "lR: " << lR << std::endl;
-        OutputDebugString(os.str().c_str());
 
         if (lR == 20)
         {
@@ -256,6 +253,12 @@ LRESULT Window::InternalWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM l
 
     case WM_SIZE:
     {
+
+        if (wParam == SIZE_MAXIMIZED)
+        {
+            OutputDebugString("Maximazed");
+        }
+
         RECT rc;
         GetClientRect(hwnd, &rc);
 
@@ -310,7 +313,22 @@ LRESULT Window::InternalWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM l
 
     case WM_LBUTTONUP:
     {
+        
         mouseTracker.LeftClickProcedure();
+        focusManager.SetFocus(mouseTracker.getElementOnHover());
+        break;
+    }
+
+    case WM_CHAR:
+    {
+        std::wstringstream os;
+        os << (const wchar_t)wParam;
+        os << "\n";
+        
+        auto wString = os.str();
+        std::string s(wString.begin(), wString.end());
+
+        OutputDebugString(s.c_str());
         break;
     }
 
@@ -367,6 +385,20 @@ void Window::AddElement(Element& rElement, bool enableMouseEvents)
         mouseTracker.AddElement(&rElement);
 }
 
+void Window::RemoveElement(const Element& rElement)
+{
+    std::remove(elements.begin(), elements.end(), &rElement);
+    mouseTracker.RemoveElement(&rElement);
+    mouseTracker.ClearElementHover();
+}
+
+void Window::RemoveElement(Element* pElement)
+{
+    std::remove(elements.begin(), elements.end(), pElement);
+    mouseTracker.RemoveElement(pElement);
+    mouseTracker.ClearElementHover();
+}
+
 int Window::GetActualWidth() const
 {
     RECT rect;
@@ -399,6 +431,18 @@ Animator& Window::GetAnimator()
 MouseTracker& Window::GetMouseTracker()
 {
     return mouseTracker;
+}
+
+const RECT& Window::GetRect() const
+{
+    RECT r;
+    GetWindowRect(hwnd, &r);
+    return r;
+}
+
+const ID2D1DeviceContext5* Window::GetDeviceContext() const
+{
+    return pContext;
 }
 
 void Window::RequestRedraw()
@@ -540,7 +584,7 @@ void Window::CreateBuffers()
             &pBitmap
         );
 
+        
         pContext->SetTarget(pBitmap);
-    
-   
+        
 }

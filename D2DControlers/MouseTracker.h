@@ -16,6 +16,8 @@ public:
 	MouseTracker() = default;
 
 	void AddElement(Element* e);
+
+	void RemoveElement(const Element* e);
 	
 	bool IsInBound(Geometry g);
 
@@ -24,6 +26,11 @@ public:
 	void LeftClickProcedure();
 
 	void SetMousePosition(int x, int y);
+
+	void ClearElementHover();
+
+	Element* getElementOnHover();
+	
 
 private:
 

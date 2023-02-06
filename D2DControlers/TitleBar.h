@@ -1,8 +1,9 @@
 #pragma once
 #include "Element.h"
-#include <d2d1.h>
+#include <d2d1_3.h>
 #include <wincodec.h>
 #include "ElementStyle.h"
+#include "Label.h"
 
 #pragma comment(lib, "windowscodecs.lib")
 
@@ -16,13 +17,15 @@ public:
 
 	virtual void SetOpacity(float opacity) override;
 
+	virtual float GetOpacity() override;
+
 	virtual void Move(int x, int y) override;
 
 	virtual HWND Show(HWND hParent, HINSTANCE hInstance) override;
 
 	virtual void OnPaint(ID2D1RenderTarget* pRenderTarget) override;
 
-	void ExOnPaint(ID2D1RenderTarget* pRenderTarger);
+	void ExOnPaint(ID2D1DeviceContext5* pRenderTarger);
 
 	void hoverCloseButton();
 	void hoverMaxButton();
@@ -32,6 +35,7 @@ public:
 	void CreateResources(ID2D1RenderTarget* pRenderTarger);
 
 	D2D1_ROUNDED_RECT roundRect;
+	Label text;
 
 	ID2D1SolidColorBrush* closeButtonBrush;
 	ID2D1SolidColorBrush* maxButtonBrush;
@@ -41,6 +45,8 @@ public:
 
 	IWICImagingFactory* pImagingFactory;
 	ID2D1Bitmap* pBitmap;
+	ID2D1SvgDocument* pSvgMax;
+	ID2D1SvgDocument* pSvgMin;
 
 
 	ElementStyle style;

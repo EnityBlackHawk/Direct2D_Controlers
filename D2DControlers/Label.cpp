@@ -1,13 +1,25 @@
 #include "Label.h"
+#include "Exception.h"
 
 Label::Label(int x, int y, int width, int height, unsigned char align, const WCHAR text[], float fontSize, ElementStyle style):
-    Element(x, y, width, height, align), text(text), fontSize(fontSize), style(style)
+    Element(x, y, width, height, align), text(text), fontSize(fontSize), style(style), textStyle()
+{
+}
+
+Label::Label(int x, int y, int width, int height, unsigned char align, const WCHAR text[], ElementStyle style, TextStyle textStyle):
+    Element(x, y, width, height, align), text(text), style(style), textStyle(textStyle), fontSize(textStyle.GetFontSize())
 {
 }
 
 void Label::SetText(const WCHAR text[])
 {
     Label::text = text;
+}
+
+void Label::SetColor(D2D1::ColorF color)
+{
+    if (pSolidColorBrush)
+        pSolidColorBrush->SetColor(color);
 }
 
 void Label::Create(HINSTANCE hInstance, HWND hParent, ID2D1RenderTarget * pRenderTarget)
@@ -18,6 +30,11 @@ void Label::Create(HINSTANCE hInstance, HWND hParent, ID2D1RenderTarget * pRende
 void Label::SetOpacity(float opacity)
 {
     pSolidColorBrush->SetOpacity(opacity);
+}
+
+float Label::GetOpacity()
+{
+    return pSolidColorBrush ? pSolidColorBrush->GetOpacity() : -1;
 }
 
 void Label::Move(int x, int y)
@@ -33,8 +50,9 @@ HWND Label::Show(HWND hParent, HINSTANCE hInstance)
 
 void Label::OnPaint(ID2D1RenderTarget* pRenderTarget)
 {
-    pRenderTarget->DrawTextA(text, getTextSize(text), pWriteFormat, D2D1::Rect(posX, posY, width + posX, height + posY),
+    pRenderTarget->DrawTextA(text, getTextSize(text), pWriteFormat, D2D1::RectF(posX, posY, width + posX, height + posY),
         pSolidColorBrush);
+
 }
 
 int Label::getTextSize(const WCHAR* text)
@@ -53,8 +71,9 @@ void Label::CreateResources(ID2D1RenderTarget* pRenderTarget)
 
     hr = DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(pWriteFactory), (IUnknown**)&pWriteFactory);
 
-    hr = pWriteFactory->CreateTextFormat(fontName, NULL, DWRITE_FONT_WEIGHT_NORMAL,
-        DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL, fontSize, L"", &pWriteFormat);
+    hr = pWriteFactory->CreateTextFormat(textStyle.GetFontFamily(), NULL, DWRITE_FONT_WEIGHT(textStyle.GetFontWeight()),
+        DWRITE_FONT_STYLE(textStyle.GetFontStyle()), DWRITE_FONT_STRETCH_NORMAL, fontSize, L"", &pWriteFormat);
+
 
     if (height == AUTO || width == AUTO)
     {

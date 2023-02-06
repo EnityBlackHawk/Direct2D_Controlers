@@ -1,7 +1,7 @@
 #pragma once
 #include <Windows.h>
 #include <unordered_map>
-#include <d2d1.h>
+#include <d2d1_3.h>
 
 #pragma comment(lib, "d2d1")
 
@@ -18,6 +18,8 @@
 #define ON_MOUSE_HOVER 1
 #define ON_MOUSE_HOVER_OUT 2
 #define ON_CLICK 3
+#define ON_FOCUS 4
+#define LOST_FOCUS 5
 
 typedef void(*EVENT)(void* sender, void* args);
 
@@ -40,6 +42,7 @@ struct Geometry
 
 class Element
 {
+
 public:
 
 	Element(int x, int y, int width, int height, unsigned char align):
@@ -58,6 +61,13 @@ public:
 	void AddEvent(int eventId, EVENT action)
 	{
 		events[eventId] = action;
+	}
+	void RemoveEvent(int eventId)
+	{
+		if (events.contains(eventId))
+		{
+			events.erase(eventId);
+		}
 	}
 
 	virtual void Raise(int eventId, void* args)
@@ -110,10 +120,44 @@ public:
 	}
 
 	virtual void SetOpacity(float opacity) = 0;
+	virtual float GetOpacity() = 0;
 
 	
 	virtual void Move(int x, int y) = 0;
 
+	void SetPos(int x, int y)
+	{
+		posX = x;
+		posY = y;
+	}
+
+	virtual void Translate(float x, float y)
+	{
+		
+		translate = D2D1::Matrix3x2F::Translation(x / 2, y / 2);
+		posX += x * 2;
+		posY += y;
+	}
+
+	virtual void Rotate(float angle)
+	{
+		transform = transform * D2D1::Matrix3x2F::Rotation(angle, D2D1::Point2F(width / 2, height / 2));
+	}
+
+	virtual void Scale(float x, float y)
+	{
+		transform = transform * D2D1::Matrix3x2F::Scale(x, y, D2D1::Point2F(width / 2, height / 2));
+	}
+
+	virtual void Skew(float angleX, float angleY)
+	{
+		transform = transform * D2D1::Matrix3x2F::Skew(angleX, angleY, D2D1::Point2F(width / 2, height / 2));
+	}
+
+	void ResetTransform()
+	{
+		transform = D2D1::Matrix3x2F::Identity();
+	}
 
 	virtual HWND Show(HWND hParent, HINSTANCE hInstance) = 0;
 
@@ -206,6 +250,12 @@ protected:
 	HWND hwnd;
 	HWND hParent;
 	unsigned char align;
+
+	bool IsFocusable = false;
+	bool IsOnFocus = false;
+
 	std::unordered_map<int, EVENT> events;
+	D2D1::Matrix3x2F transform = D2D1::Matrix3x2F::Identity();
+	D2D1::Matrix3x2F translate = D2D1::Matrix3x2F::Identity();
 };
 

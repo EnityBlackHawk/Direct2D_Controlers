@@ -7,6 +7,7 @@
 #include "MouseTracker.h"
 #include "Animator.h"
 #include "TitleBar.h"
+#include "FocusManager.h"
 
 #include <d3d11.h>
 #include <wrl/client.h>
@@ -35,12 +36,16 @@ public:
 	void Redraw();
 	void Show();
 	void AddElement(Element& rElement, bool enableMouseEvents = false);
+	void RemoveElement(const Element& rElement);
+	void RemoveElement(Element* pElement);
 	int GetActualWidth() const;
 	int GetActualHeight() const;
 	Element* operator[](int index);
 	HWND GetHwnd() const;
 	Animator& GetAnimator();
 	MouseTracker& GetMouseTracker();
+	const RECT& GetRect() const;
+	const ID2D1DeviceContext5* GetDeviceContext() const;
 
 	void RequestRedraw();
 	void ClearRedrawRequest();
@@ -50,6 +55,7 @@ public:
 	void ChangeCursor(LPCSTR cursor) const;
 
 	static DWORD WINAPI DrawThread(Window* pWindow);
+
 
 private:
 
@@ -80,6 +86,7 @@ private:
 	IDXGISurface* pDxgiBackBuffer;
 
 	MouseTracker mouseTracker;
+	FocusManager focusManager;
 	Animator animator;
 
 	TitleBar titleBar;

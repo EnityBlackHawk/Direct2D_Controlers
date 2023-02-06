@@ -2,6 +2,8 @@
 #include <vector>
 #include "Element.h"
 
+#define INFINITY 0
+#define ONCE_ONLY 1
 
 typedef void(*ANIMATION)(float delta);
 
@@ -16,13 +18,14 @@ struct _animation
 	float changeRate;
 	Element* pElement;
 	int _index;
+	char repeatBehavior;
 };
 
 class Animator
 {
 public:
 
-	int AddAnimation(ANIMATION animation, float initialValue, float targetValue, float duration, Element* pElement);
+	int AddAnimation(ANIMATION animation, float initialValue, float targetValue, float duration, Element* pElement, char repeatBehavior = ONCE_ONLY);
 
 	void StartAnimation(int index);
 	void StartAllAnimations();

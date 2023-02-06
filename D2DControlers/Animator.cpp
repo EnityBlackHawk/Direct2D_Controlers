@@ -3,7 +3,7 @@
 
 int callCounter = 0;
 
-int Animator::AddAnimation(ANIMATION animation, float initialValue, float targetValue, float duration, Element* pElement)
+int Animator::AddAnimation(ANIMATION animation, float initialValue, float targetValue, float duration, Element* pElement, char repeatBehavior)
 {
     _animation stuc = {};
     stuc.animation = animation;
@@ -12,6 +12,7 @@ int Animator::AddAnimation(ANIMATION animation, float initialValue, float target
     stuc.duration = duration;
     stuc.changeRate = (targetValue - initialValue) / (duration * 0.06);
     stuc.pElement = pElement;
+    stuc.repeatBehavior = repeatBehavior;
 
     animations.push_back(stuc);
 
@@ -48,7 +49,12 @@ DWORD __stdcall Animator::AnimationThread(_animation* an)
         an->animation(delta);
 
         if (delta == an->targetValue)
-            break;
+        {
+            if (an->repeatBehavior)
+                break;
+            else
+                delta = an->initialValue;
+        }
 
         delta += an->changeRate;
 

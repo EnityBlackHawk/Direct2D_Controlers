@@ -1,51 +1,25 @@
-#include <Windows.h>
+﻿#include <Windows.h>
 #include <random>
+#include <vector>
 #include "ElementStyle.h"
 #include "Window.h"
 #include "Frame.h"
 #include "Button.h"
 #include "Label.h"
+#include "Image.h"
+#include "Grid.h"
 
 Window* window;
-Frame* rf;
-Button* pB;
-
-std::default_random_engine generator;
-
-int delta = 0;
-bool loaded = false;
 
 
-void animation(float delta)
+void focus(void* sender, void* args)
 {
-	//pB->SetColorSolidColor(D2D1::ColorF(0xFFFFFF, delta));
-	pB->SetOpacity(delta);
-	window->RequestRedraw();
+	OutputDebugString("Focus\n");
 }
 
-void opacityIn(float delta)
+void lostFocus(void* sender, void* args)
 {
-	pB->SetOpacity(delta);
-	window->RequestRedraw();
-	//if (delta > 0.9f)
-	pB->SetActivate(true);
-}
-
-void moveAni(float delta)
-{
-	static int indexPOS = 0;
-
-	pB->SetOpacity(delta);
-	window->RequestRedraw();
-	if (delta < 0.001f)
-	{
-		std::uniform_int_distribution<int> distributionX(0, window->GetActualWidth() - pB->GetWidth());
-		std::uniform_int_distribution<int> distributionY(0, window->GetActualHeight() - pB->GetHeight());
-		pB->Move(distributionX(generator), distributionY(generator));
-		indexPOS++;
-		window->GetMouseTracker().Procedure();
-		window->GetAnimator().StartAnimation(3);
-	}
+	OutputDebugString("Lost Focus\n");
 }
 
 LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -54,65 +28,16 @@ LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		return window->InternalWindowProc(hwnd, uMsg, wParam, lParam);
 }
 
-void eventTest(void* sender, void* args)
-{
-	//SetCursor(((Button*)sender)->getCursor());
-	//window->ChangeCursor(IDC_HAND);
-	//->GetAnimator().StartAnimation(0);
-}
-
-void eventTestOut(void* sender, void* args)
-{
-	//window->GetAnimator().StartAnimation(1);
-	//window->ChangeCursor(IDC_ARROW);
-}
-
-void eventClick(void* sender, void* args)
-{
-	pB->SetAlign(ALIGN_NONE);
-	pB->SetActivate(false);
-	window->GetAnimator().StartAnimation(2);
-}
-
-void moveWithMouse(void* sender, void* args)
-{
-	coord* c = (coord*)args;
-	pB->Move(c->x, c->y);
-	window->RequestRedraw();
-}
-
 BOOL WinMain(HINSTANCE hInstance, HINSTANCE hIgnore, PSTR lpCmdLine, INT nCmdShow)
 {
-	window = new Window("Teste", hInstance, WinProc, { RGB(255,255,255), RGB(0, 0, 0), RGB(0, 0, 0), RGB(0, 0, 0) });
+	window = new Window("Teste", hInstance, WinProc, { RGB(0,0,0), RGB(0, 0, 0), RGB(0, 0, 0), RGB(0, 0, 0) });
+	
+	Button b(0, 0, AUTO, 200, ALIGN_CENTER, L"Teste", ElementStyle(0x0, 0xFFFFFF, 10, 0, 0));
+	b.AddEvent(ON_FOCUS, focus);
+	b.AddEvent(LOST_FOCUS, lostFocus);
 
-	ElementStyle style(LINEAR_GRADIENT, { 0x451057, 0xa36110 }, 0, 0, 0);
-
-	Frame f(20, 20, 100, 100, ALIGN_STREACH, style);
-
-	ElementStyle s2(SOLID_COLOR, {D2D1::ColorF(0xFFFFFF, 0.75f)}, NULL, 10, NULL, 0 );
-	Button b(100, 100, AUTO, 50, ALIGN_NONE, L"Teste", s2);
-	b.margin = { 0, 0, b.GetWidth() / 2 + 5, 0 };
-
-	pB = &b;
-
-	b.AddEvent(ON_MOUSE_HOVER, eventClick);
-
-	Button b2(AUTO, AUTO, AUTO, 50, ALIGN_CENTER, L"Teste2", s2);
-	b2.margin = { b.GetWidth() / 2 + 5, 0, 0, 0 };
-
-
-	Label l(0, 0, AUTO, AUTO, ALIGN_CENTER, L"Label", 30, ElementStyle(0, 0xFFFFFF, 0, 0, 0));
-	l.margin = { 0, 0, 0, b2.GetHeight() + 10 };
-
-	window->AddElement(f);
-	window->AddElement(l);
-	window->AddElement(b2, true);
 	window->AddElement(b, true);
 
-	window->GetAnimator().AddAnimation(animation, 0.5f, 1.0f, 250, &b);
-	window->GetAnimator().AddAnimation(animation, 1.0f, 0.5f, 250, &b);
-	window->GetAnimator().AddAnimation(moveAni, 1, 0, 100, &b);
-	window->GetAnimator().AddAnimation(opacityIn, 0, 1, 500, &b);
 	window->Show();
 
 }

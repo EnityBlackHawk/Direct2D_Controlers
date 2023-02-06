@@ -1,6 +1,7 @@
 #pragma once
 #include "Element.h"
 #include "ElementStyle.h"
+#include <d2d1effects.h>
 #include <dwrite.h>
 
 #pragma comment(lib, "Dwrite.lib")
@@ -23,6 +24,7 @@ public:
 	virtual void OnPaint(ID2D1RenderTarget* pRenderTarget) override;
 
 	virtual void SetOpacity(float opacity) override;
+	virtual float GetOpacity() override;
 
 	void SetColorSolidColor(D2D1::ColorF color);
 

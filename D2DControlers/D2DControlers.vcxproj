@@ -105,10 +105,12 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>windowscodecs.lib;Dwmapi.lib;UxTheme.lib;d2d1.lib;Dwrite.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -134,11 +136,15 @@
     <ClInclude Include="Element.h" />
     <ClInclude Include="ElementStyle.h" />
     <ClInclude Include="Exception.h" />
+    <ClInclude Include="FocusManager.h" />
     <ClInclude Include="Frame.h" />
+    <ClInclude Include="Grid.h" />
     <ClInclude Include="IInteractable.h" />
+    <ClInclude Include="Image.h" />
     <ClInclude Include="IParentable.h" />
     <ClInclude Include="Label.h" />
     <ClInclude Include="MouseTracker.h" />
+    <ClInclude Include="TextStyle.h" />
     <ClInclude Include="TitleBar.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
@@ -146,12 +152,25 @@
     <ClCompile Include="Animator.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="ElementStyle.cpp" />
+    <ClCompile Include="FocusManager.cpp" />
     <ClCompile Include="Frame.cpp" />
+    <ClCompile Include="Grid.cpp" />
+    <ClCompile Include="Image.cpp" />
     <ClCompile Include="Label.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MouseTracker.cpp" />
+    <ClCompile Include="TextStyle.cpp" />
     <ClCompile Include="TitleBar.cpp" />
     <ClCompile Include="Window.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="browsers-outline.svg">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+    <None Include="remove-outline.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Xicon.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
