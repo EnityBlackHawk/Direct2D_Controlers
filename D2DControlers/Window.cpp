@@ -317,6 +317,19 @@ LRESULT Window::InternalWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM l
         break;
     }
 
+    case WM_CHAR:
+    {
+        std::wstringstream os;
+        os << (const wchar_t)wParam;
+        os << "\n";
+        
+        auto wString = os.str();
+        std::string s(wString.begin(), wString.end());
+
+        OutputDebugString(s.c_str());
+        break;
+    }
+
     case WM_DESTROY:
         PostQuitMessage(0);
         return 0;

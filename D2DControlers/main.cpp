@@ -25,7 +25,8 @@ HANDLE mouseMoveThread = NULL;
 int Index_onNoButtonsAnimation;
 int Index_onNoBackgroundAnimation;
 int Index_onYesBackgroundAnimation;
-
+int Index_textFadeOutAnimation;
+int Index_textFadeInAnimation;
 
 std::default_random_engine generator;
 
@@ -187,7 +188,6 @@ void WINAPI imageTeste(Image* imageC)
 void noOnHover_once(void* sender, void* args)
 {
 	pB->RemoveEvent(ON_MOUSE_HOVER);
-	pLabel->SetText(L"Quer ?");
 
 	window->GetAnimator().StartAnimation(Index_onNoButtonsAnimation);
 	window->GetAnimator().StartAnimation(Index_onNoBackgroundAnimation);
@@ -208,13 +208,17 @@ void onYesClick(void* sender, void* args)
 		hearths[i].SetOpacity(1);
 	}
 
-
+	if (rf->GetOpacity() == 1.0f)
+	{
+		window->GetAnimator().StartAnimation(Index_onNoBackgroundAnimation);
+	}
 
 	if (shakeThread)
 		TerminateThread(shakeThread, 0);
 	if (mouseMoveThread)
 		TerminateThread(mouseMoveThread, 0);
 	window->GetAnimator().StartAnimation(Index_onYesBackgroundAnimation);
+	window->GetAnimator().StartAnimation(Index_textFadeOutAnimation);
 	
 	for(int i = 0; i < hearthsCount; i++)
 		CreateThread(nullptr, NULL, (LPTHREAD_START_ROUTINE)imageTeste, &hearths[i], NULL, nullptr);
@@ -249,6 +253,23 @@ void onYesBackgroundAnimation(float delta)
 		RemoveButtons();
 }
 
+void textFadeOut(float delta)
+{
+	pLabel->SetOpacity(delta);
+	window->RequestRedraw();
+	if (delta <= 0)
+	{
+		pLabel->SetText(L"Te amoooo 💕");
+		window->GetAnimator().StartAnimation(Index_textFadeInAnimation);
+	}
+}
+
+void textFadeIn(float delta)
+{
+	pLabel->SetOpacity(delta);
+	window->RequestRedraw();
+}
+
 BOOL WinMain(HINSTANCE hInstance, HINSTANCE hIgnore, PSTR lpCmdLine, INT nCmdShow)
 {
 	window = new Window("Teste", hInstance, WinProc, { RGB(0,0,0), RGB(0, 0, 0), RGB(0, 0, 0), RGB(0, 0, 0) });
@@ -265,7 +286,7 @@ BOOL WinMain(HINSTANCE hInstance, HINSTANCE hIgnore, PSTR lpCmdLine, INT nCmdSho
 	
 
 	
-	ElementStyle styleFrame(LINEAR_GRADIENT, { 0x451057, 0xa36110 }, 0, 0, 0);
+	ElementStyle styleFrame(LINEAR_GRADIENT, { 0x21498a, 0x0b1d3b }, 0, 0, 0);
 	
 	Frame f(20, 20, 100, 100, ALIGN_STREACH, styleFrame);
 	rf = &f;
@@ -305,6 +326,9 @@ BOOL WinMain(HINSTANCE hInstance, HINSTANCE hIgnore, PSTR lpCmdLine, INT nCmdSho
 	Index_onNoButtonsAnimation = animator.AddAnimation(onNoButtonsAnimation, 0, 20, 500, &b);
 	Index_onNoBackgroundAnimation = animator.AddAnimation(onNoBackgroundAnimation, 1, 0, 1000, &f);
 	Index_onYesBackgroundAnimation = animator.AddAnimation(onYesBackgroundAnimation, 1, 0, 1000, nullptr);
+
+	Index_textFadeOutAnimation = animator.AddAnimation(textFadeOut, 1, 0, 500, nullptr);
+	Index_textFadeInAnimation = animator.AddAnimation(textFadeIn, 0, 1, 500, nullptr);
 
 	window->Show();
 
