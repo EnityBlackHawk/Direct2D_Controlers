@@ -29,6 +29,9 @@ public:
 
 	void ClearElementHover();
 
+	Element* getElementOnHover();
+	
+
 private:
 
 

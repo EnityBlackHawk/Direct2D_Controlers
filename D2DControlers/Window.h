@@ -7,6 +7,7 @@
 #include "MouseTracker.h"
 #include "Animator.h"
 #include "TitleBar.h"
+#include "FocusManager.h"
 
 #include <d3d11.h>
 #include <wrl/client.h>
@@ -85,6 +86,7 @@ private:
 	IDXGISurface* pDxgiBackBuffer;
 
 	MouseTracker mouseTracker;
+	FocusManager focusManager;
 	Animator animator;
 
 	TitleBar titleBar;

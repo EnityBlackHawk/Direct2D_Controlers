@@ -66,6 +66,9 @@
     <ClInclude Include="TextStyle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="FocusManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Window.cpp">
@@ -102,6 +105,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TextStyle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FocusManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

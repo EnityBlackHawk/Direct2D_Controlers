@@ -18,6 +18,8 @@
 #define ON_MOUSE_HOVER 1
 #define ON_MOUSE_HOVER_OUT 2
 #define ON_CLICK 3
+#define ON_FOCUS 4
+#define LOST_FOCUS 5
 
 typedef void(*EVENT)(void* sender, void* args);
 
@@ -55,8 +57,6 @@ public:
 		Geometry g = {posX, posY, width, height};
 		return g;
 	}
-
-	
 
 	void AddEvent(int eventId, EVENT action)
 	{
@@ -250,6 +250,10 @@ protected:
 	HWND hwnd;
 	HWND hParent;
 	unsigned char align;
+
+	bool IsFocusable = false;
+	bool IsOnFocus = false;
+
 	std::unordered_map<int, EVENT> events;
 	D2D1::Matrix3x2F transform = D2D1::Matrix3x2F::Identity();
 	D2D1::Matrix3x2F translate = D2D1::Matrix3x2F::Identity();

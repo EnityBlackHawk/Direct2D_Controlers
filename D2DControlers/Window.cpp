@@ -313,7 +313,9 @@ LRESULT Window::InternalWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM l
 
     case WM_LBUTTONUP:
     {
+        
         mouseTracker.LeftClickProcedure();
+        focusManager.SetFocus(mouseTracker.getElementOnHover());
         break;
     }
 

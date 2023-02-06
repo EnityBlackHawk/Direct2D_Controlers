@@ -73,3 +73,8 @@ void MouseTracker::ClearElementHover()
 {
 	elementOnHover = nullptr;
 }
+
+Element* MouseTracker::getElementOnHover()
+{
+	return elementOnHover;
+}
