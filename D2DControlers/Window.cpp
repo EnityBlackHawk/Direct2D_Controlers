@@ -6,6 +6,7 @@
 #include <sstream>
 #include <windowsx.h>
 #include "ElementStyle.h"
+#include "TextBox.h"
 
 #pragma comment(lib, "Dwmapi.lib")
 #pragma comment(lib, "UxTheme.lib")
@@ -318,17 +319,40 @@ LRESULT Window::InternalWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM l
         focusManager.SetFocus(mouseTracker.getElementOnHover());
         break;
     }
-
+    
+    /*case WM_KEYDOWN:
+    {
+        if (wParam == VK_BACK)
+        {
+            if (focusManager.getElementOnFocus())
+            {
+                auto e = focusManager.getElementOnFocus();
+                reinterpret_cast<TextBox*>(e)->RemoveChar();
+                RequestRedraw();
+            }
+        }
+        break;
+        
+    }*/
     case WM_CHAR:
     {
-        std::wstringstream os;
+        /*std::wstringstream os;
         os << (const wchar_t)wParam;
         os << "\n";
         
         auto wString = os.str();
         std::string s(wString.begin(), wString.end());
 
-        OutputDebugString(s.c_str());
+        OutputDebugString(s.c_str());*/
+
+        if (focusManager.getElementOnFocus())
+        {
+            auto e = focusManager.getElementOnFocus();
+            e->Raise(ON_TYPING, &wParam);
+            RequestRedraw();
+        }
+
+
         break;
     }
 

@@ -20,6 +20,7 @@
 #define ON_CLICK 3
 #define ON_FOCUS 4
 #define LOST_FOCUS 5
+#define ON_TYPING 6
 
 typedef void(*EVENT)(void* sender, void* args);
 

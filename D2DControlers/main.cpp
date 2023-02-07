@@ -8,6 +8,7 @@
 #include "Label.h"
 #include "Image.h"
 #include "Grid.h"
+#include "TextBox.h"
 
 Window* window;
 
@@ -32,11 +33,9 @@ BOOL WinMain(HINSTANCE hInstance, HINSTANCE hIgnore, PSTR lpCmdLine, INT nCmdSho
 {
 	window = new Window("Teste", hInstance, WinProc, { RGB(0,0,0), RGB(0, 0, 0), RGB(0, 0, 0), RGB(0, 0, 0) });
 	
-	Button b(0, 0, AUTO, 200, ALIGN_CENTER, L"Teste", ElementStyle(0x0, 0xFFFFFF, 10, 0, 0));
-	b.AddEvent(ON_FOCUS, focus);
-	b.AddEvent(LOST_FOCUS, lostFocus);
+	TextBox tb(0, 0, 120, 30, ALIGN_CENTER, ElementStyle(0x444444, 0xFFFFFF, 10.0f, 0, 0));
 
-	window->AddElement(b, true);
+	window->AddElement(tb, true);
 
 	window->Show();
 
