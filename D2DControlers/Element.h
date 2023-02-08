@@ -47,7 +47,6 @@ class Element
 
 public:
 
-	friend class FocusManager;
 
 	Element(int x, int y, int width, int height, unsigned char align):
 		posX(x), posY(y), width(width), height(height), align(align)

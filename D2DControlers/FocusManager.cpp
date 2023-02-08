@@ -16,13 +16,11 @@ void FocusManager::SetFocus(Element* pElement)
 	if (pElement)
 	{
 		pElement->Raise(ON_FOCUS, nullptr);
-		pElement->IsOnFocus = true;
 	}
 }
 
 void FocusManager::RemoveFocus()
 {
 	elementOnFocus->Raise(LOST_FOCUS, nullptr);
-	elementOnFocus->IsOnFocus = false;
 	elementOnFocus = nullptr;
 }
