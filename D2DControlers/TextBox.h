@@ -24,7 +24,9 @@ public:
 	void InputChar(const wchar_t* character);
 	void RemoveChar();
 
+	static void OnTypingEvent(void* sender, void* args);
 	static void OnFocusEvent(void* sender, void* args);
+	static void OnLostFocusEvent(void* sender, void* args);
 
 private:
 

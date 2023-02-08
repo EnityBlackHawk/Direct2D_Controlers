@@ -1,17 +1,33 @@
 #include "TextBox.h"
 
+// Default events
+void TextBox::OnTypingEvent(void* sender, void* args)
+{
+    auto obj = reinterpret_cast<TextBox*>(sender);
+    obj->InputChar((const wchar_t*)args);
+
+}
 
 void TextBox::OnFocusEvent(void* sender, void* args)
 {
     auto obj = reinterpret_cast<TextBox*>(sender);
-    obj->InputChar((const wchar_t*)args);
+    obj->text.append(L"|");
+}
+
+void TextBox::OnLostFocusEvent(void* sender, void* args)
+{
+    auto obj = reinterpret_cast<TextBox*>(sender);
+    obj->text.pop_back();
 }
 
 
 TextBox::TextBox(int x, int y, int width, int height, unsigned char align, ElementStyle style):
 Element(x, y, width == AUTO ? height * 5.10 : width, height, align), text(text), style(style), fontSize(20.0f)
 {
-    AddEvent(ON_TYPING, OnFocusEvent);
+    padding = { 10, 0, 0, 0 };
+    AddEvent(ON_TYPING, OnTypingEvent);
+    AddEvent(ON_FOCUS, OnFocusEvent);
+    AddEvent(LOST_FOCUS, OnLostFocusEvent);
 }
 
 void TextBox::Create(HINSTANCE hInstance, HWND hParent, ID2D1RenderTarget* pRenderTarget)
@@ -50,7 +66,7 @@ void TextBox::OnPaint(ID2D1RenderTarget* pRenderTarget)
    pRenderTarget->SetTransform(translate * transform);
 
    pRenderTarget->FillRoundedRectangle(roundRect, pSolidColorBrush);
-   pRenderTarget->DrawTextA(text.c_str(), text.size(), pWriteFormat, D2D1::RectF(posX, posY, width + posX, height + posY),
+   pRenderTarget->DrawTextA(text.c_str(), text.size(), pWriteFormat, D2D1::RectF(posX + padding.left, posY, width + posX, height + posY),
        pForegroundBrush);
 
     pRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
@@ -62,10 +78,13 @@ void TextBox::SetText(const WCHAR* text)
 
 void TextBox::InputChar(const wchar_t* character)
 {
-    if (text.size() && (char)*character == '\b')
-        text.pop_back();
+    if (text.size() > 1 && (char)*character == '\b')
+        text.erase(text.size() - 2, 1);
+    else if (*character == 127)
+        return;
     else
-        text.append((const wchar_t*)character);
+        //text.append((const wchar_t*)character);
+        text.insert(text.size() - 1, (const wchar_t*)character);
 }
 
 void TextBox::RemoveChar()

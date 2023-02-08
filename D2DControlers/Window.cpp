@@ -494,7 +494,7 @@ DWORD __stdcall Window::DrawThread(Window* pWindow)
 {
     while (true)
     {
-        if (pWindow->IsRedrawRequested())
+        if (true || pWindow->IsRedrawRequested())
         {
             RedrawWindow(pWindow->GetHwnd(), NULL, NULL, RDW_INVALIDATE | RDW_ERASE);
             pWindow->ClearRedrawRequest();
